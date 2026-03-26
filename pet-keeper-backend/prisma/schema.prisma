@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 用户表
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  avatar    String?
+  role      String   @default("user") // user, admin
+  isBanned  Boolean  @default(false)  // 是否被禁言
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pets     Pet[]
+  posts    Post[]
+  comments Comment[]
+  likes    Like[]
+}
+
+// 物种表
+model Species {
+  id               String   @id @default(uuid())
+  name             String
+  scientificName   String
+  category         String   // insect, reptile, aquatic, bird, exotic
+  subcategory      String
+  image            String
+  difficulty       String   // beginner, intermediate, advanced
+  temperatureMin   Int
+  temperatureMax   Int
+  humidityMin      Int
+  humidityMax      Int
+  lifespan         String
+  origin           String
+  diet             String   // JSON array
+  feedingFrequency String
+  enclosureSize    String
+  substrate        String   // JSON array
+  decor            String   // JSON array
+  lifecycle        String   // JSON array
+  diseases         String   // JSON array
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+// 宠物表
+model Pet {
+  id             String   @id @default(uuid())
+  name           String
+  species        String   // 用户自定义物种名称
+  image          String?
+  birthDate      DateTime
+  acquisitionDate DateTime
+  userId         String
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  records  Record[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 饲养记录表
+model Record {
+  id     String   @id @default(uuid())
+  petId  String
+  type   String   // molt, feeding, weighing, water_change, treatment, breeding, other
+  date   DateTime
+  notes  String
+  image  String?
+  weight Float?
+  length Float?
+
+  pet Pet @relation(fields: [petId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 社区帖子表
+model Post {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  image     String?
+  tags      String   // JSON array
+  authorId  String
+
+  author  User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes   Like[]
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 点赞表
+model Like {
+  id     String @id @default(uuid())
+  postId String
+  userId String
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId]) // 一个用户只能给一个帖子点一次赞
+
+  createdAt DateTime @default(now())
+}
+
+// 评论表
+model Comment {
+  id     String @id @default(uuid())
+  postId String
+  userId String
+  content String
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
