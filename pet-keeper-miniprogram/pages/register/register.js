@@ -1,66 +1,93 @@
 // pages/register/register.js
+const { authApi } = require('../../utils/api')
+const util = require('../../utils/util')
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    email: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    loading: false
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  // 输入邮箱
+  onEmailInput(e) {
+    this.setData({ email: e.detail.value })
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  // 输入用户名
+  onUsernameInput(e) {
+    this.setData({ username: e.detail.value })
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  // 输入密码
+  onPasswordInput(e) {
+    this.setData({ password: e.detail.value })
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  // 确认密码
+  onConfirmPasswordInput(e) {
+    this.setData({ confirmPassword: e.detail.value })
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
+  // 注册
+  async onRegister() {
+    const { email, username, password, confirmPassword } = this.data
 
+    // 验证
+    if (!email) {
+      util.showToast('请输入邮箱')
+      return
+    }
+    if (!username) {
+      util.showToast('请输入用户名')
+      return
+    }
+    if (username.length < 3 || username.length > 20) {
+      util.showToast('用户名需要3-20个字符')
+      return
+    }
+    if (!password) {
+      util.showToast('请输入密码')
+      return
+    }
+    if (password.length < 6) {
+      util.showToast('密码至少6个字符')
+      return
+    }
+    if (password !== confirmPassword) {
+      util.showToast('两次密码不一致')
+      return
+    }
+
+    try {
+      this.setData({ loading: true })
+      util.showLoading('注册中...')
+
+      const res = await authApi.register({ email, username, password })
+
+      // 保存登录状态
+      const app = getApp()
+      app.login(res.token, res.user)
+
+      util.hideLoading()
+      util.showToast('注册成功', 'success')
+
+      // 跳转首页
+      setTimeout(() => {
+        wx.switchTab({ url: '/pages/index/index' })
+      }, 1500)
+    } catch (err) {
+      util.hideLoading()
+      util.showToast(err.message || '注册失败')
+    } finally {
+      this.setData({ loading: false })
+    }
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  // 跳转登录
+  goToLogin() {
+    wx.navigateBack()
   }
 })

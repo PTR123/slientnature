@@ -1,2 +1,81 @@
 <!--pages/community/create/create.wxml-->
-<text>pages/community/create/create.wxml</text>
+<view class="container">
+  <view class="form-card card">
+    <!-- 标题 -->
+    <view class="form-item">
+      <text class="form-label">标题 <text class="required">*</text></text>
+      <input
+        class="form-input"
+        placeholder="请输入标题（必填）"
+        value="{{title}}"
+        bindinput="onTitleInput"
+        maxlength="50"
+      />
+      <text class="char-count">{{title.length}}/50</text>
+    </view>
+
+    <!-- 内容 -->
+    <view class="form-item">
+      <text class="form-label">内容 <text class="required">*</text></text>
+      <textarea
+        class="form-textarea"
+        placeholder="分享你的养宠经验、心得或趣事..."
+        value="{{content}}"
+        bindinput="onContentInput"
+        maxlength="2000"
+      ></textarea>
+      <text class="char-count">{{content.length}}/2000</text>
+    </view>
+
+    <!-- 图片 -->
+    <view class="form-item">
+      <text class="form-label">图片（最多9张）</text>
+      <view class="image-list">
+        <view class="image-item" wx:for="{{images}}" wx:key="index">
+          <image
+            class="preview-image"
+            src="{{item}}"
+            mode="aspectFill"
+            data-url="{{item}}"
+            bindtap="previewImage"
+          ></image>
+          <view class="delete-btn" data-index="{{index}}" catchtap="deleteImage">×</view>
+        </view>
+        <view class="add-image" wx:if="{{images.length < 9}}" bindtap="chooseImage">
+          <text class="add-icon">+</text>
+          <text class="add-text">添加图片</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 标签 -->
+    <view class="form-item">
+      <text class="form-label">标签（最多5个）</text>
+      <view class="tag-list" wx:if="{{tags.length > 0}}">
+        <view class="tag-item" wx:for="{{tags}}" wx:key="index">
+          <text class="tag-text">{{item}}</text>
+          <text class="tag-delete" data-index="{{index}}" catchtap="deleteTag">×</text>
+        </view>
+      </view>
+      <view class="tag-input-wrapper" wx:if="{{tags.length < 5}}">
+        <input
+          class="tag-input"
+          placeholder="输入标签后回车添加"
+          value="{{tagInput}}"
+          bindinput="onTagInput"
+          confirm-type="done"
+          bindconfirm="addTag"
+          maxlength="10"
+        />
+        <button class="add-tag-btn" bindtap="addTag">添加</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button class="submit-btn {{submitting ? 'disabled' : ''}}" bindtap="submitPost">
+      {{submitting ? '发布中...' : '发布帖子'}}
+    </button>
+  </view>
+</view>

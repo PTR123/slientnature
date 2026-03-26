@@ -1,66 +1,91 @@
 // pages/species/detail/detail.js
+const { speciesApi } = require('../../../utils/api')
+const util = require('../../../utils/util')
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    species: null,
+    loading: true
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
-
+    const { id } = options
+    if (id) {
+      this.loadSpeciesDetail(id)
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
+  async loadSpeciesDetail(id) {
+    try {
+      util.showLoading('加载中...')
 
+      const species = await speciesApi.getDetail(id)
+
+      this.setData({
+        species,
+        loading: false
+      })
+
+      wx.setNavigationBarTitle({
+        title: species.name || '物种详情'
+      })
+
+      util.hideLoading()
+    } catch (err) {
+      console.error('加载物种详情失败:', err)
+      util.hideLoading()
+      util.showToast('加载失败')
+      this.setData({ loading: false })
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
+  // 预览图片
+  previewImage(e) {
+    const { url } = e.currentTarget.dataset
+    const { species } = this.data
 
+    if (species && species.images && species.images.length > 0) {
+      wx.previewImage({
+        urls: species.images,
+        current: url || species.images[0]
+      })
+    } else if (species && species.image) {
+      wx.previewImage({
+        urls: [species.image],
+        current: species.image
+      })
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  // 复制文本
+  copyText(e) {
+    const { text } = e.currentTarget.dataset
+    wx.setClipboardData({
+      data: text,
+      success: () => {
+        util.showToast('已复制')
+      }
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
   onPullDownRefresh() {
-
+    const { species } = this.data
+    if (species && species.id) {
+      this.loadSpeciesDetail(species.id)
+    }
+    setTimeout(() => {
+      wx.stopPullDownRefresh()
+    }, 500)
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
   onShareAppMessage() {
-
+    const { species } = this.data
+    if (species) {
+      return {
+        title: `${species.name} - PetKeeper物种图鉴`,
+        path: `/pages/species/detail/detail?id=${species.id}`,
+        imageUrl: species.image || ''
+      }
+    }
   }
 })

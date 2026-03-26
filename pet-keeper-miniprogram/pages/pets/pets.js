@@ -1,66 +1,80 @@
-// pages/pets/pets.js
+const { petApi } = require('../../utils/api')
+const util = require('../../utils/util')
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    pets: [],
+    loading: true,
+    isLoggedIn: false
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
+  onLoad() {
+    this.checkLoginAndLoad()
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow() {
-
+    this.checkLoginAndLoad()
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
+  checkLoginAndLoad() {
+    const app = getApp()
+    const isLoggedIn = app.isLoggedIn()
+    this.setData({ isLoggedIn, loading: true })
 
+    if (isLoggedIn) {
+      this.loadPets()
+    } else {
+      this.setData({ loading: false, pets: [] })
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
+  async loadPets() {
+    try {
+      const pets = await petApi.getList()
 
+      // 格式化数据
+      const formattedPets = pets.map(pet => ({
+        ...pet,
+        createdAt: util.formatDate(pet.createdAt, 'YYYY-MM-DD'),
+        birthDate: pet.birthDate ? util.formatDate(pet.birthDate, 'YYYY-MM-DD') : ''
+      }))
+
+      this.setData({
+        pets: formattedPets,
+        loading: false
+      })
+    } catch (err) {
+      console.error('加载宠物列表失败:', err)
+      util.showToast('加载失败')
+      this.setData({ loading: false })
+    }
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
+  goToDetail(e) {
+    const { id } = e.currentTarget.dataset
+    wx.navigateTo({
+      url: `/pages/pets/detail/detail?id=${id}`
+    })
+  },
+
+  goToCreate() {
+    util.requireLogin(() => {
+      wx.navigateTo({
+        url: '/pages/pets/create/create'
+      })
+    })
+  },
+
+  goToLogin() {
+    wx.navigateTo({
+      url: '/pages/login/login'
+    })
+  },
+
   onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+    this.checkLoginAndLoad()
+    setTimeout(() => {
+      wx.stopPullDownRefresh()
+    }, 500)
   }
 })

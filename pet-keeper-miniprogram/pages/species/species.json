@@ -1,3 +1,4 @@
 {
-  "navigationBarTitleText": "species"
+  "navigationBarTitleText": "物种图鉴",
+  "enablePullDownRefresh": true
 }

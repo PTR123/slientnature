@@ -1,2 +1,158 @@
 <!--pages/pets/create/create.wxml-->
-<text>pages/pets/create/create.wxml</text>
+<view class="container">
+  <view class="form-card card">
+    <!-- 宠物照片 -->
+    <view class="form-item">
+      <text class="form-label">宠物照片</text>
+      <view class="image-upload" bindtap="chooseImage">
+        <image wx:if="{{formData.image}}" class="preview-image" src="{{formData.image}}" mode="aspectFill"></image>
+        <view wx:else class="upload-placeholder">
+          <text class="upload-icon">+</text>
+          <text class="upload-text">上传照片</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 宠物名称 -->
+    <view class="form-item">
+      <text class="form-label">宠物名称 <text class="required">*</text></text>
+      <input
+        class="form-input"
+        placeholder="请输入宠物名称"
+        value="{{formData.name}}"
+        data-field="name"
+        bindinput="onInputChange"
+        maxlength="50"
+      />
+    </view>
+
+    <!-- 物种 -->
+    <view class="form-item">
+      <text class="form-label">物种 <text class="required">*</text></text>
+      <picker
+        mode="selector"
+        range="{{speciesList}}"
+        range-key="name"
+        bindchange="onSpeciesChange"
+      >
+        <view class="form-picker">
+          <text class="{{formData.species ? 'picker-value' : 'picker-placeholder'}}">
+            {{formData.species || '请选择物种'}}
+          </text>
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 品种 -->
+    <view class="form-item">
+      <text class="form-label">品种</text>
+      <input
+        class="form-input"
+        placeholder="请输入品种（选填）"
+        value="{{formData.breed}}"
+        data-field="breed"
+        bindinput="onInputChange"
+        maxlength="50"
+      />
+    </view>
+
+    <!-- 性别 -->
+    <view class="form-item">
+      <text class="form-label">性别</text>
+      <picker
+        mode="selector"
+        range="{{genderOptions}}"
+        range-key="label"
+        value="{{genderOptions.findIndex(item => item.value === formData.gender)}}"
+        bindchange="onGenderChange"
+      >
+        <view class="form-picker">
+          <text class="picker-value">
+            {{genderOptions[genderOptions.findIndex(item => item.value === formData.gender)].label}}
+          </text>
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 出生日期 -->
+    <view class="form-item">
+      <text class="form-label">出生日期</text>
+      <picker
+        mode="date"
+        value="{{formData.birthDate}}"
+        start="1990-01-01"
+        end="2030-12-31"
+        bindchange="onBirthDateChange"
+      >
+        <view class="form-picker">
+          <text class="{{formData.birthDate ? 'picker-value' : 'picker-placeholder'}}">
+            {{formData.birthDate || '请选择出生日期'}}
+          </text>
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 年龄 -->
+    <view class="form-item">
+      <text class="form-label">年龄</text>
+      <input
+        class="form-input"
+        placeholder="例如：6个月"
+        value="{{formData.age}}"
+        data-field="age"
+        bindinput="onInputChange"
+        maxlength="20"
+      />
+    </view>
+
+    <!-- 体重 -->
+    <view class="form-item">
+      <text class="form-label">体重（克）</text>
+      <input
+        class="form-input"
+        type="digit"
+        placeholder="请输入体重（选填）"
+        value="{{formData.weight}}"
+        data-field="weight"
+        bindinput="onInputChange"
+      />
+    </view>
+
+    <!-- 颜色 -->
+    <view class="form-item">
+      <text class="form-label">颜色</text>
+      <input
+        class="form-input"
+        placeholder="请输入颜色（选填）"
+        value="{{formData.color}}"
+        data-field="color"
+        bindinput="onInputChange"
+        maxlength="20"
+      />
+    </view>
+
+    <!-- 备注 -->
+    <view class="form-item">
+      <text class="form-label">备注</text>
+      <textarea
+        class="form-textarea"
+        placeholder="请输入备注信息（选填）"
+        value="{{formData.notes}}"
+        data-field="notes"
+        bindinput="onInputChange"
+        maxlength="500"
+      ></textarea>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="button-group">
+    <button class="btn-primary" bindtap="submitForm">
+      {{isEdit ? '保存修改' : '创建宠物'}}
+    </button>
+    <button class="btn-secondary" bindtap="resetForm" wx:if="{{!isEdit}}">重置</button>
+  </view>
+</view>

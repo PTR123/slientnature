@@ -1,3 +1,5 @@
 {
-  "navigationBarTitleText": "community"
+  "navigationBarTitleText": "社区",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 100
 }

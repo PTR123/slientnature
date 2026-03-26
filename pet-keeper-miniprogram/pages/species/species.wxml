@@ -1,2 +1,67 @@
 <!--pages/species/species.wxml-->
-<text>pages/species/species.wxml</text>
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索物种名称"
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearch"
+      />
+      <text wx:if="{{searchKeyword}}" class="search-clear" bindtap="clearSearch">×</text>
+    </view>
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+
+  <!-- 分类标签 -->
+  <scroll-view class="category-scroll" scroll-x>
+    <view class="category-list">
+      <view
+        class="category-item {{currentCategory === item.id ? 'active' : ''}}"
+        wx:for="{{categories}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="switchCategory"
+      >
+        <text class="category-icon">{{item.icon}}</text>
+        <text class="category-name">{{item.name}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{speciesList.length === 0}}" class="empty-state">
+    <text class="empty-icon">🔍</text>
+    <text class="empty-text">暂无物种数据</text>
+  </view>
+
+  <!-- 物种列表 -->
+  <view wx:else class="species-list">
+    <view
+      class="species-card card"
+      wx:for="{{speciesList}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="goToDetail"
+    >
+      <image class="species-image" src="{{item.image || '/images/default-species.png'}}" mode="aspectFill"></image>
+      <view class="species-info">
+        <view class="species-name">{{item.name}}</view>
+        <view class="species-scientific" wx:if="{{item.scientificName}}">{{item.scientificName}}</view>
+        <view class="species-category">
+          <text class="tag">{{item.categoryName || item.category}}</text>
+        </view>
+        <view class="species-desc" wx:if="{{item.description}}">{{item.description}}</view>
+      </view>
+      <view class="species-arrow">></view>
+    </view>
+  </view>
+</view>

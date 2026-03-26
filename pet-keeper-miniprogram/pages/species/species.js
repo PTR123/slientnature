@@ -1,66 +1,106 @@
 // pages/species/species.js
+const { speciesApi } = require('../../utils/api')
+const util = require('../../utils/util')
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    speciesList: [],
+    categories: [
+      { id: '', name: '全部', icon: '🐾' },
+      { id: 'insect', name: '昆虫', icon: '🐜' },
+      { id: 'reptile', name: '爬宠', icon: '🦎' },
+      { id: 'aquatic', name: '水族', icon: '🐠' },
+      { id: 'bird', name: '鸟类', icon: '🦜' },
+      { id: 'exotic', name: '异宠', icon: '🦔' }
+    ],
+    currentCategory: '',
+    loading: true,
+    searchKeyword: ''
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
-
+    const { category } = options
+    if (category) {
+      this.setData({ currentCategory: category })
+    }
+    this.loadSpecies()
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow() {
-
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 1
+      })
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
+  async loadSpecies() {
+    try {
+      this.setData({ loading: true })
 
+      const params = {}
+      if (this.data.currentCategory) {
+        params.category = this.data.currentCategory
+      }
+
+      const speciesList = await speciesApi.getList(params)
+
+      this.setData({
+        speciesList,
+        loading: false
+      })
+    } catch (err) {
+      console.error('加载物种列表失败:', err)
+      util.showToast('加载失败')
+      this.setData({ loading: false })
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  // 切换分类
+  switchCategory(e) {
+    const { id } = e.currentTarget.dataset
+    this.setData({ currentCategory: id })
+    this.loadSpecies()
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
+  // 搜索
+  onSearchInput(e) {
+    this.setData({ searchKeyword: e.detail.value })
+  },
+
+  onSearch() {
+    const { searchKeyword } = this.data
+    if (!searchKeyword.trim()) {
+      this.loadSpecies()
+      return
+    }
+
+    // 本地搜索过滤
+    const filtered = this.data.speciesList.filter(item =>
+      item.name.includes(searchKeyword) ||
+      (item.scientificName && item.scientificName.includes(searchKeyword))
+    )
+
+    this.setData({ speciesList: filtered })
+  },
+
+  clearSearch() {
+    this.setData({ searchKeyword: '' })
+    this.loadSpecies()
+  },
+
+  // 跳转到详情
+  goToDetail(e) {
+    const { id } = e.currentTarget.dataset
+    wx.navigateTo({
+      url: `/pages/species/detail/detail?id=${id}`
+    })
+  },
+
   onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+    this.loadSpecies()
+    setTimeout(() => {
+      wx.stopPullDownRefresh()
+    }, 500)
   }
 })

@@ -1,2 +1,66 @@
 <!--pages/register/register.wxml-->
-<text>pages/register/register.wxml</text>
+<view class="container register-container">
+  <view class="register-header">
+    <view class="register-title">创建账号</view>
+    <view class="register-subtitle">加入 PetKeeper 大家庭</view>
+  </view>
+
+  <view class="register-form">
+    <view class="form-item">
+      <view class="form-label">邮箱</view>
+      <input
+        class="input"
+        type="text"
+        placeholder="请输入邮箱"
+        value="{{email}}"
+        bindinput="onEmailInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">用户名</view>
+      <input
+        class="input"
+        type="text"
+        placeholder="3-20个字符"
+        value="{{username}}"
+        bindinput="onUsernameInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">密码</view>
+      <input
+        class="input"
+        type="password"
+        placeholder="至少6个字符"
+        value="{{password}}"
+        bindinput="onPasswordInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">确认密码</view>
+      <input
+        class="input"
+        type="password"
+        placeholder="再次输入密码"
+        value="{{confirmPassword}}"
+        bindinput="onConfirmPasswordInput"
+      />
+    </view>
+
+    <button
+      class="btn-primary register-btn"
+      loading="{{loading}}"
+      bindtap="onRegister"
+    >
+      注册
+    </button>
+
+    <view class="register-footer">
+      <text>已有账号？</text>
+      <text class="link" bindtap="goToLogin">立即登录</text>
+    </view>
+  </view>
+</view>

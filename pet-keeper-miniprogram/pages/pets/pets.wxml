@@ -1,2 +1,74 @@
 <!--pages/pets/pets.wxml-->
-<text>pages/pets/pets.wxml</text>
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="header-title">我的宠物</view>
+    <view class="header-action">
+      <button class="btn-add" bindtap="goToCreate">+ 添加宠物</button>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 未登录提示 -->
+  <view wx:elif="{{!isLoggedIn}}" class="empty-state">
+    <text class="empty-icon">🔐</text>
+    <text class="empty-text">请先登录</text>
+    <button class="btn-primary" bindtap="goToLogin">立即登录</button>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{pets.length === 0}}" class="empty-state">
+    <text class="empty-icon">🐾</text>
+    <text class="empty-text">还没有宠物档案</text>
+    <text class="empty-desc">快添加你的第一个宠物吧</text>
+    <button class="btn-primary" bindtap="goToCreate">添加宠物</button>
+  </view>
+
+  <!-- 宠物列表 -->
+  <view wx:else class="pet-list">
+    <view
+      class="pet-card card"
+      wx:for="{{pets}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="goToDetail"
+    >
+      <view class="pet-header">
+        <image class="pet-avatar" src="{{item.image || '/images/default-pet.png'}}" mode="aspectFill"></image>
+        <view class="pet-info">
+          <view class="pet-name">{{item.name}}</view>
+          <view class="pet-species">{{item.speciesName || item.species}}</view>
+          <view class="pet-breed" wx:if="{{item.breed}}">{{item.breed}}</view>
+        </view>
+        <view class="pet-gender">{{item.gender === 'male' ? '♂' : item.gender === 'female' ? '♀' : ''}}</view>
+      </view>
+
+      <view class="pet-details">
+        <view class="detail-item" wx:if="{{item.age}}">
+          <text class="detail-label">年龄</text>
+          <text class="detail-value">{{item.age}}</text>
+        </view>
+        <view class="detail-item" wx:if="{{item.weight}}">
+          <text class="detail-label">体重</text>
+          <text class="detail-value">{{item.weight}}g</text>
+        </view>
+        <view class="detail-item" wx:if="{{item.birthDate}}">
+          <text class="detail-label">生日</text>
+          <text class="detail-value">{{item.birthDate}}</text>
+        </view>
+      </view>
+
+      <view class="pet-notes" wx:if="{{item.notes}}">
+        <text class="notes-text">{{item.notes}}</text>
+      </view>
+
+      <view class="pet-footer">
+        <text class="create-time">{{item.createdAt}}</text>
+      </view>
+    </view>
+  </view>
+</view>
