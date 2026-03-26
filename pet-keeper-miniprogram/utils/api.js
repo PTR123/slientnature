@@ -10,6 +10,13 @@ function request(url, method = 'GET', data = {}) {
   return new Promise((resolve, reject) => {
     const token = app.globalData.token
 
+    console.log('🚀 API Request:', {
+      url: `${app.globalData.apiBaseUrl}${url}`,
+      method,
+      data,
+      hasToken: !!token
+    })
+
     wx.request({
       url: `${app.globalData.apiBaseUrl}${url}`,
       method,
@@ -19,20 +26,44 @@ function request(url, method = 'GET', data = {}) {
         'Authorization': token ? `Bearer ${token}` : ''
       },
       success(res) {
+        console.log('✅ API Response:', res)
+
         if (res.statusCode === 200) {
           resolve(res.data)
         } else if (res.statusCode === 401) {
-          // 未授权，跳转登录
+          // 未授权
+          console.error('❌ 401 Unauthorized:', res.data)
+          const errorMsg = res.data.error || res.data.message || '未授权，请登录'
+          wx.showToast({
+            title: errorMsg,
+            icon: 'none'
+          })
           app.logout()
-          wx.navigateTo({ url: '/pages/login/login' })
-          reject(new Error('未授权，请登录'))
+          reject(new Error(errorMsg))
+        } else if (res.statusCode === 400) {
+          // 参数错误
+          console.error('❌ 400 Bad Request:', res.data)
+          const errorMsg = res.data.error || '请求参数错误'
+          wx.showToast({
+            title: errorMsg,
+            icon: 'none'
+          })
+          reject(new Error(errorMsg))
         } else {
-          reject(new Error(res.data.message || '请求失败'))
+          // 其他错误
+          console.error('❌ API Error:', res)
+          const errorMsg = res.data.error || res.data.message || '请求失败'
+          wx.showToast({
+            title: errorMsg,
+            icon: 'none'
+          })
+          reject(new Error(errorMsg))
         }
       },
       fail(err) {
+        console.error('❌ Network Error:', err)
         wx.showToast({
-          title: '网络错误',
+          title: '网络错误，请检查连接',
           icon: 'none'
         })
         reject(err)
