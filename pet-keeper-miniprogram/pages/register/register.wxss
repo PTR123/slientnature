@@ -1,0 +1,26 @@
+/* pages/register/register.wxss */
+.register-container {
+  min-height: 100vh;
+  padding: 60rpx;
+}
+
+.register-form {
+  margin-top: 60rpx;
+}
+
+.register-btn {
+  margin-top: 48rpx;
+  width: 100%;
+}
+
+.register-footer {
+  text-align: center;
+  margin-top: 32rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.link {
+  color: #4a784a;
+  font-weight: 500;
+}

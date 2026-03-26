@@ -1,0 +1,8 @@
+/* 宠物列表样式 */
+.pet-list {
+  padding: 20rpx;
+}
+
+.pet-card {
+  margin-bottom: 20rpx;
+}

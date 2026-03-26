@@ -1,0 +1,4 @@
+/* 宠物详情样式 */
+.detail-container {
+  padding: 20rpx;
+}

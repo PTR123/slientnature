@@ -28,27 +28,19 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "images/tab-home.png",
-        "selectedIconPath": "images/tab-home-active.png"
+        "text": "首页"
       },
       {
         "pagePath": "pages/species/species",
-        "text": "图鉴",
-        "iconPath": "images/tab-species.png",
-        "selectedIconPath": "images/tab-species-active.png"
+        "text": "图鉴"
       },
       {
         "pagePath": "pages/community/community",
-        "text": "社区",
-        "iconPath": "images/tab-community.png",
-        "selectedIconPath": "images/tab-community-active.png"
+        "text": "社区"
       },
       {
         "pagePath": "pages/profile/profile",
-        "text": "我的",
-        "iconPath": "images/tab-profile.png",
-        "selectedIconPath": "images/tab-profile-active.png"
+        "text": "我的"
       }
     ]
   },
