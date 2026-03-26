@@ -1,0 +1,96 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 未登录状态 -->
+  <view wx:if="{{!userInfo}}" class="welcome-section">
+    <view class="welcome-content">
+      <image class="welcome-logo" src="/images/logo.png" mode="aspectFit"></image>
+      <view class="welcome-title">PetKeeper</view>
+      <view class="welcome-desc">专业的异宠饲养管理平台</view>
+      <button class="btn-primary welcome-btn" bindtap="goToLogin">立即登录</button>
+    </view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view wx:else>
+    <!-- 快捷入口 -->
+    <view class="section">
+      <view class="section-title">物种分类</view>
+      <view class="category-grid">
+        <view
+          class="category-item"
+          wx:for="{{categories}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="goToCategory"
+        >
+          <view class="category-icon">{{item.icon}}</view>
+          <view class="category-name">{{item.name}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 我的宠物 -->
+    <view class="section">
+      <view class="section-header">
+        <view class="section-title">我的宠物</view>
+        <view class="section-more" bindtap="goToAddPet">+ 添加</view>
+      </view>
+
+      <view wx:if="{{pets.length === 0}}" class="empty-state">
+        <view class="empty-text">还没有宠物档案</view>
+        <button class="btn-secondary" bindtap="goToAddPet">创建第一个宠物</button>
+      </view>
+
+      <view wx:else class="pet-list">
+        <view
+          class="pet-card card"
+          wx:for="{{pets}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="goToPetDetail"
+        >
+          <image class="pet-image" src="{{item.image || '/images/default-pet.png'}}" mode="aspectFill"></image>
+          <view class="pet-info">
+            <view class="pet-name">{{item.name}}</view>
+            <view class="pet-species">{{item.species}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 热门帖子 -->
+    <view class="section">
+      <view class="section-header">
+        <view class="section-title">热门帖子</view>
+        <navigator class="section-more" url="/pages/community/community">更多 ></navigator>
+      </view>
+
+      <view wx:if="{{recentPosts.length === 0}}" class="empty-state">
+        <view class="empty-text">暂无帖子</view>
+      </view>
+
+      <view wx:else class="post-list">
+        <view
+          class="post-card card"
+          wx:for="{{recentPosts}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="goToPostDetail"
+        >
+          <view class="post-title">{{item.title}}</view>
+          <view class="post-content text-ellipsis-2">{{item.content}}</view>
+          <view class="post-footer">
+            <view class="post-author">
+              <image class="author-avatar" src="{{item.author.avatar || '/images/default-avatar.png'}}"></image>
+              <text>{{item.author.username}}</text>
+            </view>
+            <view class="post-stats">
+              <text>❤️ {{item.likes}}</text>
+              <text>💬 {{item.comments}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
