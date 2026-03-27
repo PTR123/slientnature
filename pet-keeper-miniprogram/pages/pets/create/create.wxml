@@ -39,7 +39,7 @@
           <text class="{{formData.species ? 'picker-value' : 'picker-placeholder'}}">
             {{formData.species || '请选择物种'}}
           </text>
-          <text class="picker-arrow">></text>
+          <text class="picker-arrow">›</text>
         </view>
       </picker>
     </view>
@@ -71,7 +71,7 @@
           <text class="picker-value">
             {{genderOptions[genderOptions.findIndex(item => item.value === formData.gender)].label}}
           </text>
-          <text class="picker-arrow">></text>
+          <text class="picker-arrow">›</text>
         </view>
       </picker>
     </view>
@@ -90,7 +90,7 @@
           <text class="{{formData.birthDate ? 'picker-value' : 'picker-placeholder'}}">
             {{formData.birthDate || '请选择出生日期'}}
           </text>
-          <text class="picker-arrow">></text>
+          <text class="picker-arrow">›</text>
         </view>
       </picker>
     </view>
