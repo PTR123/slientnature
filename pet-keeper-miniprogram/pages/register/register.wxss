@@ -1,11 +1,93 @@
 /* pages/register/register.wxss */
+
 .register-container {
   min-height: 100vh;
   padding: 60rpx;
 }
 
+.register-header {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+
+.register-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.register-subtitle {
+  font-size: 28rpx;
+  color: #666;
+}
+
 .register-form {
-  margin-top: 60rpx;
+  margin-top: 40rpx;
+}
+
+/* 注册方式切换 */
+.register-tabs {
+  display: flex;
+  margin-bottom: 40rpx;
+  border-radius: 50rpx;
+  background: #f5f5f5;
+  padding: 8rpx;
+}
+
+.register-tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  color: #666;
+  transition: all 0.3s;
+}
+
+.register-tab.active {
+  background: #4a784a;
+  color: #fff;
+  font-weight: 500;
+}
+
+.form-item {
+  margin-bottom: 32rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.required {
+  color: #e74c3c;
+  margin-left: 4rpx;
+}
+
+/* 验证码输入组 */
+.code-input-group {
+  display: flex;
+  gap: 20rpx;
+}
+
+.code-input {
+  flex: 1;
+}
+
+.btn-code {
+  background: #f5f5f5;
+  color: #4a784a;
+  border: none;
+  padding: 24rpx 32rpx;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  white-space: nowrap;
+}
+
+.btn-code[disabled] {
+  color: #999;
 }
 
 .register-btn {

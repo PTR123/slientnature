@@ -108,9 +108,24 @@ const authApi = {
     return request('/auth/register', 'POST', data)
   },
 
-  // 登录
+  // 邮箱登录
   login(data) {
     return request('/auth/login', 'POST', data)
+  },
+
+  // 手机号登录
+  loginWithPhone(data) {
+    return request('/auth/login/phone', 'POST', data)
+  },
+
+  // 微信手机号登录
+  wechatLogin(data) {
+    return request('/auth/login/wechat', 'POST', data)
+  },
+
+  // 发送短信验证码
+  sendSmsCode(data) {
+    return request('/auth/sms/send', 'POST', data)
   },
 
   // 获取当前用户信息
