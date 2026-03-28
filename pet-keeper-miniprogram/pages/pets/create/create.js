@@ -24,7 +24,8 @@ Page({
       { value: 'male', label: '公' },
       { value: 'female', label: '母' },
       { value: 'unknown', label: '未知' }
-    ]
+    ],
+    genderIndex: 2 // 默认选中"未知"
   },
 
   onLoad(options) {
@@ -63,7 +64,8 @@ Page({
           color: pet.color || '',
           image: pet.image || '',
           notes: pet.notes || ''
-        }
+        },
+        genderIndex: this.data.genderOptions.findIndex(item => item.value === (pet.gender || 'unknown'))
       })
 
       wx.setNavigationBarTitle({
@@ -123,7 +125,8 @@ Page({
     const index = e.detail.value
     const gender = this.data.genderOptions[index]
     this.setData({
-      'formData.gender': gender.value
+      'formData.gender': gender.value,
+      genderIndex: index
     })
   },
 

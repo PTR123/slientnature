@@ -64,12 +64,12 @@
         mode="selector"
         range="{{genderOptions}}"
         range-key="label"
-        value="{{genderOptions.findIndex(item => item.value === formData.gender)}}"
+        value="{{genderIndex}}"
         bindchange="onGenderChange"
       >
         <view class="form-picker">
           <text class="picker-value">
-            {{genderOptions[genderOptions.findIndex(item => item.value === formData.gender)].label}}
+            {{genderOptions[genderIndex].label}}
           </text>
           <text class="picker-arrow">›</text>
         </view>
