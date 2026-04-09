@@ -25,29 +25,73 @@ Page({
   // 选择图片
   async chooseImage() {
     try {
-      const { images } = this.data
-      if (images.length >= 9) {
-        util.showToast('最多上传9张图片')
+      const app = getApp()
+      if (!app.isLoggedIn()) {
+        wx.showToast({
+          title: '请先登录',
+          icon: 'none'
+        })
         return
       }
 
-      const tempFiles = await util.chooseImage(9 - images.length)
-      util.showLoading('上传中...')
+      const { images } = this.data
+      if (images.length >= 9) {
+        wx.showToast({
+          title: '最多上传9张图片',
+          icon: 'none'
+        })
+        return
+      }
 
-      // 上传图片
-      const uploadPromises = tempFiles.map(filePath => postApi.uploadImage(filePath))
-      const urls = await Promise.all(uploadPromises)
+      wx.chooseMedia({
+        count: 9 - images.length,
+        mediaType: ['image'],
+        sourceType: ['album', 'camera'],
+        success: async (res) => {
+          const tempFiles = res.tempFiles.map(file => file.tempFilePath)
 
-      this.setData({
-        images: [...images, ...urls]
+          wx.showLoading({
+            title: '上传中...',
+            mask: true
+          })
+
+          try {
+            // 上传图片
+            const uploadPromises = tempFiles.map(filePath => postApi.uploadImage(filePath))
+            const urls = await Promise.all(uploadPromises)
+
+            this.setData({
+              images: [...images, ...urls]
+            })
+
+            wx.hideLoading()
+            wx.showToast({
+              title: '上传成功',
+              icon: 'success'
+            })
+          } catch (err) {
+            console.error('上传图片失败:', err)
+            wx.hideLoading()
+            wx.showToast({
+              title: '上传失败: ' + (err.message || '未知错误'),
+              icon: 'none'
+            })
+          }
+        },
+        fail: (err) => {
+          console.error('选择图片失败:', err)
+          wx.showToast({
+            title: '选择图片失败',
+            icon: 'none'
+          })
+        }
       })
-
-      util.hideLoading()
-      util.showToast('上传成功')
     } catch (err) {
-      console.error('上传图片失败:', err)
-      util.hideLoading()
-      util.showToast('上传失败')
+      console.error('chooseImage错误:', err)
+      wx.showToast({
+        title: '操作失败',
+        icon: 'none'
+      })
     }
   },
 

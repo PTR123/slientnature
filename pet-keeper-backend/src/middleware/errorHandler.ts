@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import { Router, Response } from 'express';
 
 export const errorHandler = (
   err: any,
-  req: Request,
+  req: any,
   res: Response,
-  next: NextFunction
+  next: any
 ) => {
   console.error('Error:', err);
 
@@ -15,4 +15,8 @@ export const errorHandler = (
     error: message,
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
   });
+};
+
+export const notFoundHandler = (req: any, res: Response, next: any) => {
+  res.status(404).json({ error: 'Not found' });
 };

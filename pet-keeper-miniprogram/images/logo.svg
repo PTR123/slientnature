@@ -1,0 +1,6 @@
+<!-- 占位SVG Logo -->
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#4a784a" rx="20"/>
+  <text x="100" y="90" text-anchor="middle" fill="white" font-size="60" font-weight="bold">自</text>
+  <text x="100" y="160" text-anchor="middle" fill="white" font-size="24">PetKeeper</text>
+</svg>

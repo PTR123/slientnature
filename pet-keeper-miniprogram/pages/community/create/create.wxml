@@ -11,7 +11,7 @@
         bindinput="onTitleInput"
         maxlength="50"
       />
-      <text class="char-count">{{title.length}}/50</text>
+      <view class="char-count">{{title.length}}/50</view>
     </view>
 
     <!-- 内容 -->
@@ -23,8 +23,9 @@
         value="{{content}}"
         bindinput="onContentInput"
         maxlength="2000"
+        auto-height
       ></textarea>
-      <text class="char-count">{{content.length}}/2000</text>
+      <view class="char-count">{{content.length}}/2000</view>
     </view>
 
     <!-- 图片 -->

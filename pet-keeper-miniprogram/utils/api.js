@@ -34,39 +34,33 @@ function request(url, method = 'GET', data = {}) {
           // 未授权
           console.error('❌ 401 Unauthorized:', res.data)
           const errorMsg = res.data.error || res.data.message || '未授权，请登录'
-          wx.showToast({
-            title: errorMsg,
-            icon: 'none'
-          })
-          app.logout()
           reject(new Error(errorMsg))
         } else if (res.statusCode === 400) {
           // 参数错误
           console.error('❌ 400 Bad Request:', res.data)
           const errorMsg = res.data.error || '请求参数错误'
-          wx.showToast({
-            title: errorMsg,
-            icon: 'none'
-          })
+          reject(new Error(errorMsg))
+        } else if (res.statusCode === 404) {
+          // 资源不存在
+          console.error('❌ 404 Not Found:', res.data)
+          const errorMsg = res.data.error || '请求的资源不存在'
+          reject(new Error(errorMsg))
+        } else if (res.statusCode === 500) {
+          // 服务器错误
+          console.error('❌ 500 Server Error:', res.data)
+          const errorMsg = res.data.error || '服务器错误，请稍后重试'
           reject(new Error(errorMsg))
         } else {
           // 其他错误
           console.error('❌ API Error:', res)
-          const errorMsg = res.data.error || res.data.message || '请求失败'
-          wx.showToast({
-            title: errorMsg,
-            icon: 'none'
-          })
+          const errorMsg = res.data.error || res.data.message || `请求失败(${res.statusCode})`
           reject(new Error(errorMsg))
         }
       },
       fail(err) {
         console.error('❌ Network Error:', err)
-        wx.showToast({
-          title: '网络错误，请检查连接',
-          icon: 'none'
-        })
-        reject(err)
+        const errorMsg = err.errMsg || '网络连接失败，请检查网络设置'
+        reject(new Error(errorMsg))
       }
     })
   })
@@ -87,15 +81,21 @@ function uploadImage(filePath) {
         'Authorization': `Bearer ${token}`
       },
       success(res) {
-        const data = JSON.parse(res.data)
-        if (res.statusCode === 200) {
-          resolve(data.url)
-        } else {
-          reject(new Error(data.message || '上传失败'))
+        try {
+          const data = JSON.parse(res.data)
+          if (res.statusCode === 200 && data.url) {
+            resolve(data.url)
+          } else {
+            reject(new Error(data.error || data.message || '上传失败'))
+          }
+        } catch (e) {
+          console.error('Parse upload response error:', e)
+          reject(new Error('服务器响应格式错误'))
         }
       },
       fail(err) {
-        reject(err)
+        console.error('Upload network error:', err)
+        reject(new Error(err.errMsg || '网络连接失败'))
       }
     })
   })
@@ -169,6 +169,11 @@ const petApi = {
   // 获取记录
   getRecords(id) {
     return request(`/pets/${id}/records`)
+  },
+
+  // 上传图片
+  uploadImage(filePath) {
+    return uploadImage(filePath)
   }
 }
 
@@ -221,6 +226,94 @@ const postApi = {
   // 添加评论
   addComment(id, data) {
     return request(`/posts/${id}/comments`, 'POST', data)
+  },
+
+  // 上传图片
+  uploadImage(filePath) {
+    return uploadImage(filePath)
+  }
+}
+
+// 商城相关 API
+const shopApi = {
+  // 获取商品列表
+  getProducts(params = {}) {
+    const queryString = Object.keys(params)
+      .map(key => `${key}=${params[key]}`)
+      .join('&')
+    return request(`/products?${queryString}`)
+  },
+
+  // 获取商品详情
+  getProduct(id) {
+    return request(`/products/${id}`)
+  },
+
+  // 获取分类列表
+  getCategories() {
+    return request('/categories')
+  }
+}
+
+// 购物车相关 API
+const cartApi = {
+  // 获取购物车
+  getCart() {
+    return request('/cart')
+  },
+
+  // 添加到购物车
+  addToCart(data) {
+    return request('/cart', 'POST', data)
+  },
+
+  // 更新购物车项
+  updateCartItem(id, data) {
+    return request(`/cart/${id}`, 'PUT', data)
+  },
+
+  // 删除购物车项
+  removeFromCart(id) {
+    return request(`/cart/${id}`, 'DELETE')
+  }
+}
+
+// 订单相关 API
+const orderApi = {
+  // 获取订单列表
+  getOrders(params = {}) {
+    const queryString = Object.keys(params)
+      .map(key => `${key}=${params[key]}`)
+      .join('&')
+    return request(`/orders?${queryString}`)
+  },
+
+  // 获取订单详情
+  getOrder(id) {
+    return request(`/orders/${id}`)
+  },
+
+  // 创建订单
+  createOrder(data) {
+    return request('/orders', 'POST', data)
+  },
+
+  // 取消订单
+  cancelOrder(id) {
+    return request(`/orders/${id}/cancel`, 'POST')
+  },
+
+  // 确认收货
+  confirmOrder(id) {
+    return request(`/orders/${id}/complete`, 'POST')
+  }
+}
+
+// 支付相关 API
+const paymentApi = {
+  // 发起支付
+  createPayment(orderId) {
+    return request(`/payment/${orderId}`, 'POST')
   }
 }
 
@@ -230,5 +323,9 @@ module.exports = {
   authApi,
   petApi,
   speciesApi,
-  postApi
+  postApi,
+  shopApi,
+  cartApi,
+  orderApi,
+  paymentApi
 }

@@ -88,7 +88,18 @@ Page({
       this.handleLoginSuccess(res)
     } catch (err) {
       util.hideLoading()
-      util.showToast(err.message || '登录失败')
+
+      // 显示详细错误信息
+      const errorMsg = err.message || '登录失败，请稍后重试'
+
+      // 如果是网络错误，给出具体提示
+      if (err.errMsg && err.errMsg.includes('request:fail')) {
+        util.showToast('网络连接失败，请检查网络或服务器地址')
+      } else {
+        util.showToast(errorMsg)
+      }
+
+      console.error('登录失败详情:', err)
     } finally {
       this.setData({ loading: false })
     }
@@ -115,7 +126,15 @@ Page({
       this.handleLoginSuccess(res)
     } catch (err) {
       util.hideLoading()
-      util.showToast(err.message || '登录失败')
+
+      const errorMsg = err.message || '登录失败，请稍后重试'
+      if (err.errMsg && err.errMsg.includes('request:fail')) {
+        util.showToast('网络连接失败，请检查网络或服务器地址')
+      } else {
+        util.showToast(errorMsg)
+      }
+
+      console.error('手机号登录失败详情:', err)
     } finally {
       this.setData({ loading: false })
     }
@@ -127,6 +146,7 @@ Page({
 
     if (e.detail.errMsg !== 'getPhoneNumber:ok') {
       console.log('用户拒绝授权')
+      util.showToast('已取消授权')
       return
     }
 
@@ -152,7 +172,15 @@ Page({
       this.handleLoginSuccess(res)
     } catch (err) {
       util.hideLoading()
-      util.showToast(err.message || '登录失败')
+
+      const errorMsg = err.message || '微信登录失败，请稍后重试'
+      if (err.errMsg && err.errMsg.includes('request:fail')) {
+        util.showToast('网络连接失败，请检查网络或服务器地址')
+      } else {
+        util.showToast(errorMsg)
+      }
+
+      console.error('微信登录失败详情:', err)
     } finally {
       this.setData({ loading: false })
     }

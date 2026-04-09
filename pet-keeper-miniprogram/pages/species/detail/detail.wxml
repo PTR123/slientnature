@@ -14,6 +14,7 @@
         src="{{species.image || '/images/default-species.png'}}"
         mode="aspectFill"
         bindtap="previewImage"
+        binderror="onImageError"
       ></image>
       <view class="species-overlay">
         <view class="species-name">{{species.name}}</view>
@@ -67,9 +68,58 @@
     </view>
 
     <!-- 食物需求 -->
-    <view class="section-card card" wx:if="{{species.diet}}">
+    <view class="section-card card" wx:if="{{species.dietList && species.dietList.length > 0}}">
       <view class="card-title">食物需求</view>
-      <view class="diet-content">{{species.diet}}</view>
+      <view class="list-content">
+        <view class="list-item" wx:for="{{species.dietList}}" wx:key="index">
+          <view class="list-icon">🍖</view>
+          <view class="list-text">{{item}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底材推荐 -->
+    <view class="section-card card" wx:if="{{species.substrateList && species.substrateList.length > 0}}">
+      <view class="card-title">底材推荐</view>
+      <view class="list-content">
+        <view class="list-item" wx:for="{{species.substrateList}}" wx:key="index">
+          <view class="list-icon">🌿</view>
+          <view class="list-text">{{item}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 装饰建议 -->
+    <view class="section-card card" wx:if="{{species.decorList && species.decorList.length > 0}}">
+      <view class="card-title">装饰建议</view>
+      <view class="list-content">
+        <view class="list-item" wx:for="{{species.decorList}}" wx:key="index">
+          <view class="list-icon">🏠</view>
+          <view class="list-text">{{item}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 生命周期 -->
+    <view class="section-card card" wx:if="{{species.lifecycleList && species.lifecycleList.length > 0}}">
+      <view class="card-title">生命周期</view>
+      <view class="list-content">
+        <view class="list-item" wx:for="{{species.lifecycleList}}" wx:key="index">
+          <view class="list-icon">🔄</view>
+          <view class="list-text">{{item}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 常见疾病 -->
+    <view class="section-card card" wx:if="{{species.diseasesList && species.diseasesList.length > 0}}">
+      <view class="card-title">常见疾病</view>
+      <view class="list-content">
+        <view class="list-item list-item-warning" wx:for="{{species.diseasesList}}" wx:key="index">
+          <view class="list-icon">⚠️</view>
+          <view class="list-text">{{item}}</view>
+        </view>
+      </view>
     </view>
 
     <!-- 注意事项 -->

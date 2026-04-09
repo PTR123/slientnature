@@ -1,0 +1,105 @@
+<!--pages/shop/shop.wxml-->
+<view class="container shop-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+    <input
+      class="search-input"
+      placeholder="搜索商品"
+      value="{{keyword}}"
+      bindinput="onSearchInput"
+      bindconfirm="onSearch"
+    />
+    <view class="cart-icon" bindtap="goToCart">
+      <image src="/images/cart-icon.png" class="cart-img"></image>
+      <text class="cart-badge" wx:if="{{cartCount > 0}}">{{cartCount}}</text>
+    </view>
+  </view>
+
+  <!-- 分类筛选 -->
+  <scroll-view class="category-scroll" scroll-x>
+    <view class="category-list">
+      <view
+        class="category-item {{currentCategory === '' ? 'active' : ''}}"
+        bindtap="onCategoryTap"
+        data-id=""
+      >
+        全部
+      </view>
+      <view
+        class="category-item {{currentCategory === item.id ? 'active' : ''}}"
+        wx:for="{{categories}}"
+        wx:key="id"
+        bindtap="onCategoryTap"
+        data-id="{{item.id}}"
+      >
+        {{item.name}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 商品列表 -->
+  <view class="products-grid">
+    <view
+      class="product-card"
+      wx:for="{{products}}"
+      wx:key="id"
+    >
+      <image
+        class="product-image"
+        src="{{item.images[0] || '/images/default-product.png'}}"
+        mode="aspectFill"
+        bindtap="goToDetail"
+        data-id="{{item.id}}"
+      ></image>
+
+      <view class="product-info">
+        <view class="product-name" bindtap="goToDetail" data-id="{{item.id}}">
+          {{item.name}}
+        </view>
+
+        <view class="product-desc text-ellipsis">{{item.description}}</view>
+
+        <view class="product-footer">
+          <view class="product-price">
+            <text class="price-current">¥{{item.price}}</text>
+            <text wx:if="{{item.originalPrice}}" class="price-original">¥{{item.originalPrice}}</text>
+          </view>
+
+          <view class="product-actions">
+            <button
+              class="cart-btn"
+              catchtap="addToCart"
+              data-id="{{item.id}}"
+              plain="true"
+            >
+              加购
+            </button>
+            <button
+              class="buy-btn"
+              catchtap="buyNow"
+              data-id="{{item.id}}"
+            >
+              购买
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-state">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 没有更多 -->
+  <view wx:if="{{!hasMore && products.length > 0}}" class="no-more">
+    <text>没有更多了</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{!loading && products.length === 0}}" class="empty-state">
+    <text>暂无商品</text>
+  </view>
+</view>

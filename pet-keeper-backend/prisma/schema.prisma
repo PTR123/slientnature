@@ -3,26 +3,43 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 // 用户表
 model User {
   id        String   @id @default(uuid())
-  email     String   @unique
+  email     String?  @unique  // 改为可选，支持手机号登录
+  phone     String?  @unique  // 新增手机号字段
   username  String   @unique
-  password  String
+  password  String?           // 改为可选，支持微信登录
   avatar    String?
   role      String   @default("user") // user, admin
   isBanned  Boolean  @default(false)  // 是否被禁言
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  pets     Pet[]
-  posts    Post[]
-  comments Comment[]
-  likes    Like[]
+  pets      Pet[]
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  cartItems CartItem[]
+  orders    Order[]
+  addresses Address[]
+}
+
+// 短信验证码表
+model SmsCode {
+  id        String   @id @default(uuid())
+  phone     String
+  code      String
+  type      String   // login, register, reset
+  used      Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([phone, code])
 }
 
 // 物种表
@@ -128,4 +145,122 @@ model Comment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// 商品分类表
+model ProductCategory {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  image       String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products Product[]
+}
+
+// 商品表
+model Product {
+  id            String   @id @default(uuid())
+  name          String
+  description   String
+  content       String   // 商品详情（富文本）
+  categoryId    String
+  images        String   // JSON 数组
+  price         Float
+  originalPrice Float?
+  stock         Int      @default(0)
+  sales         Int      @default(0)
+  unit          String   @default("件")
+  isHot         Boolean  @default(false)
+  isNew         Boolean  @default(false)
+  isRecommend   Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  category   ProductCategory @relation(fields: [categoryId], references: [id])
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+}
+
+// 购物车表
+model CartItem {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  quantity  Int      @default(1)
+  selected  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+// 订单表
+model Order {
+  id              String   @id @default(uuid())
+  orderNo         String   @unique
+  userId          String
+  totalAmount     Float
+  payAmount       Float
+  status          String   @default("pending") // pending, paid, shipped, completed, cancelled
+  receiverName    String
+  receiverPhone   String
+  receiverAddress String
+  remark          String?
+
+  // 支付相关
+  transactionId   String?  // 第三方支付流水号
+  paymentMethod   String?  // 支付方式: wechat, alipay, mock
+
+  paidAt          DateTime?
+  shippedAt       DateTime?
+  completedAt     DateTime?
+  cancelledAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items OrderItem[]
+}
+
+// 订单项表
+model OrderItem {
+  id           String   @id @default(uuid())
+  orderId      String
+  productId    String
+  productName  String
+  productImage String
+  price        Float
+  quantity     Int
+  createdAt    DateTime @default(now())
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
+
+// 收货地址表
+model Address {
+  id           String   @id @default(uuid())
+  userId       String
+  receiverName String
+  receiverPhone String
+  province     String
+  city         String
+  district     String
+  detail       String   // 详细地址
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

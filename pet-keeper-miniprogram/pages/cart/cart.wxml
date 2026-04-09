@@ -1,0 +1,72 @@
+<!--pages/cart/cart.wxml-->
+<view class="container cart-container">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 购物车列表 -->
+  <view wx:elif="{{cartItems.length > 0}}">
+    <!-- 全选 -->
+    <view class="select-all card">
+      <checkbox
+        checked="{{selectedItems.length === cartItems.length}}"
+        bindtap="onSelectAll"
+      />
+      <text>全选</text>
+    </view>
+
+    <!-- 商品列表 -->
+    <view class="cart-list">
+      <view class="cart-item card" wx:for="{{cartItems}}" wx:key="id">
+        <checkbox
+          checked="{{selectedItems.includes(item.id)}}"
+          bindtap="onItemSelect"
+          data-id="{{item.id}}"
+        />
+
+        <image
+          class="item-image"
+          src="{{item.product.images[0] || '/images/default-product.png'}}"
+          mode="aspectFill"
+          bindtap="goToDetail"
+          data-id="{{item.productId}}"
+        ></image>
+
+        <view class="item-info">
+          <view class="item-name" bindtap="goToDetail" data-id="{{item.productId}}">
+            {{item.product.name}}
+          </view>
+
+          <view class="item-price">¥{{item.product.price}}</view>
+
+          <view class="item-controls">
+            <view class="quantity-controls">
+              <button class="quantity-btn" bindtap="onQuantityChange" data-id="{{item.id}}" data-type="minus">-</button>
+              <text class="quantity-num">{{item.quantity}}</text>
+              <button class="quantity-btn" bindtap="onQuantityChange" data-id="{{item.id}}" data-type="plus">+</button>
+            </view>
+
+            <button class="delete-btn" bindtap="onDelete" data-id="{{item.id}}">删除</button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部结算栏 -->
+    <view class="checkout-bar">
+      <view class="total-info">
+        <text>合计：</text>
+        <text class="total-price">¥{{totalPrice}}</text>
+      </view>
+
+      <button class="checkout-btn" bindtap="onCheckout">去结算</button>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:else class="empty-state">
+    <text>购物车是空的</text>
+    <button class="btn-primary" bindtap="goToShop">去逛逛</button>
+  </view>
+</view>

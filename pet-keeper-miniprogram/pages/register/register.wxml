@@ -2,7 +2,7 @@
 <view class="container register-container">
   <view class="register-header">
     <view class="register-title">创建账号</view>
-    <view class="register-subtitle">加入 PetKeeper 大家庭</view>
+    <view class="register-subtitle">加入自然不语大家庭</view>
   </view>
 
   <view class="register-form">

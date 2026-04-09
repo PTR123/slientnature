@@ -3,7 +3,7 @@ App({
   globalData: {
     userInfo: null,
     token: null,
-    apiBaseUrl: 'http://localhost:3001/api' // 本地测试地址
+    apiBaseUrl: 'http://192.168.3.20:3001/api' // 本地测试地址
   },
 
   onLaunch() {

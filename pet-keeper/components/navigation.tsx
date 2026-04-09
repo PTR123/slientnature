@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Leaf, Menu, X, User, LogOut, Shield } from 'lucide-react';
+import { Leaf, Menu, X, User, LogOut, Shield, ShoppingCart, Package } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/components/auth-provider';
@@ -11,6 +11,7 @@ import { useAuth } from '@/components/auth-provider';
 const navLinks = [
   { href: '/species', label: '物种图鉴' },
   { href: '/my-pets', label: '我的记录' },
+  { href: '/shop', label: '商城' },
   { href: '/community', label: '社区' }
 ];
 
@@ -57,6 +58,18 @@ export default function Navigation() {
           <div className="hidden md:flex md:items-center md:space-x-4">
             {user ? (
               <>
+                <Link href="/cart">
+                  <Button variant="ghost" size="sm">
+                    <ShoppingCart className="h-4 w-4 mr-1" />
+                    购物车
+                  </Button>
+                </Link>
+                <Link href="/orders">
+                  <Button variant="ghost" size="sm">
+                    <Package className="h-4 w-4 mr-1" />
+                    我的订单
+                  </Button>
+                </Link>
                 {user.role === 'admin' && (
                   <Link href="/admin">
                     <Button variant="ghost" size="sm">
@@ -119,6 +132,18 @@ export default function Navigation() {
               <div className="flex flex-col space-y-2 pt-4 border-t border-cream-200">
                 {user ? (
                   <>
+                    <Link href="/cart" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" size="sm" className="justify-start w-full">
+                        <ShoppingCart className="h-4 w-4 mr-1" />
+                        购物车
+                      </Button>
+                    </Link>
+                    <Link href="/orders" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" size="sm" className="justify-start w-full">
+                        <Package className="h-4 w-4 mr-1" />
+                        我的订单
+                      </Button>
+                    </Link>
                     {user.role === 'admin' && (
                       <Link href="/admin" onClick={() => setMobileMenuOpen(false)}>
                         <Button variant="ghost" size="sm" className="justify-start w-full">

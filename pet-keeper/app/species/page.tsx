@@ -1,32 +1,118 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Thermometer, Droplets, Search, Filter } from 'lucide-react';
-import { speciesData, categories } from '@/lib/data';
+import { Thermometer, Droplets, Search, Filter, Loader2 } from 'lucide-react';
+import { apiClient } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
+const categories = [
+  { id: 'insect', name: '昆虫', subcategories: ['甲虫', '螳螂', '蝴蝶/飞蛾', '蝗虫'] },
+  { id: 'reptile', name: '爬宠', subcategories: ['守宫', '蜥蜴', '蛇', '龟'] },
+  { id: 'aquatic', name: '水族', subcategories: ['观赏虾', '热带鱼', '原生鱼', '观赏螺'] },
+  { id: 'bird', name: '鸟类', subcategories: ['鹦鹉', '雀类'] },
+  { id: 'exotic', name: '异宠', subcategories: ['捕鸟蛛', '蜜袋鼯', '松鼠', '刺猬'] }
+];
+
+// 解析JSON数组的辅助函数
+function parseJsonArray(data: any): any[] {
+  if (!data) return [];
+  if (Array.isArray(data)) return data;
+  if (typeof data === 'string') {
+    try {
+      const parsed = JSON.parse(data);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.error('Failed to parse array:', e);
+      return [];
+    }
+  }
+  return [];
+}
+
 export default function SpeciesPage() {
+  const [species, setSpecies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredSpecies = speciesData.filter((species) => {
-    const matchesCategory = !selectedCategory || species.category === selectedCategory;
-    const matchesSubcategory =
-      !selectedSubcategory || species.subcategory === selectedSubcategory;
+  useEffect(() => {
+    loadSpecies();
+  }, []);
+
+  const loadSpecies = async () => {
+    try {
+      setLoading(true);
+      const data = await apiClient.getSpecies();
+      // 确保数组字段被正确解析
+      const parsedData = data.map((s: any) => ({
+        ...s,
+        diet: parseJsonArray(s.diet),
+        substrate: parseJsonArray(s.substrate),
+        decor: parseJsonArray(s.decor),
+        lifecycle: parseJsonArray(s.lifecycle),
+        diseases: parseJsonArray(s.diseases)
+      }));
+      setSpecies(parsedData);
+    } catch (error) {
+      console.error('Failed to load species:', error);
+      // 如果API失败，可以回退到静态数据
+      // 但正常情况下应该显示错误信息
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredSpecies = species.filter((s) => {
+    const matchesCategory = !selectedCategory || s.category === selectedCategory;
+    const matchesSubcategory = !selectedSubcategory || s.subcategory === selectedSubcategory;
     const matchesSearch =
       !searchQuery ||
-      species.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      species.scientificName.toLowerCase().includes(searchQuery.toLowerCase());
+      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.scientificName.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSubcategory && matchesSearch;
   });
 
   const currentCategory = categories.find((c) => c.id === selectedCategory);
+
+  const getDifficultyLabel = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner':
+        return '新手友好';
+      case 'intermediate':
+        return '进阶玩家';
+      case 'advanced':
+        return '专业玩家';
+      default:
+        return difficulty;
+    }
+  };
+
+  const getDifficultyVariant = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner':
+        return 'default';
+      case 'intermediate':
+        return 'secondary';
+      case 'advanced':
+        return 'destructive';
+      default:
+        return 'outline';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-cream-50 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-forest-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-cream-50 botanical-pattern">
@@ -192,47 +278,51 @@ export default function SpeciesPage() {
 
             {/* Species Grid */}
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {filteredSpecies.map((species) => (
-                <Link key={species.id} href={`/species/${species.id}`}>
+              {filteredSpecies.map((s) => (
+                <Link key={s.id} href={`/species/${s.id}`}>
                   <Card className="overflow-hidden hover-lift h-full group">
                     <div className="relative h-56 overflow-hidden">
                       <Image
-                        src={species.image}
-                        alt={species.name}
+                        src={s.image || '/images/default-species.png'}
+                        alt={s.name}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-110"
+                        onError={(e) => {
+                          // 图片加载失败时使用占位符
+                          const target = e.target as HTMLImageElement;
+                          target.src = 'https://via.placeholder.com/400x300?text=No+Image';
+                        }}
+                        unoptimized={s.image?.startsWith('http://localhost:3001')}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                       <Badge
-                        variant={species.difficulty}
+                        variant={getDifficultyVariant(s.difficulty)}
                         className="absolute top-3 right-3"
                       >
-                        {species.difficulty === 'beginner' && '新手友好'}
-                        {species.difficulty === 'intermediate' && '进阶玩家'}
-                        {species.difficulty === 'advanced' && '专业玩家'}
+                        {getDifficultyLabel(s.difficulty)}
                       </Badge>
                       <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
                         <h3 className="font-display font-semibold text-xl mb-1">
-                          {species.name}
+                          {s.name}
                         </h3>
                         <p className="text-sm text-white/80 italic">
-                          {species.scientificName}
+                          {s.scientificName}
                         </p>
                       </div>
                     </div>
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm text-forest-600">{species.subcategory}</span>
-                        <span className="text-sm text-forest-600">{species.lifespan}</span>
+                        <span className="text-sm text-forest-600">{s.subcategory}</span>
+                        <span className="text-sm text-forest-600">{s.lifespan}</span>
                       </div>
                       <div className="flex items-center gap-4 text-sm text-forest-700">
                         <div className="flex items-center">
                           <Thermometer className="h-4 w-4 mr-1 text-terracotta-600" />
-                          {species.temperature.min}-{species.temperature.max}°C
+                          {s.temperatureMin}-{s.temperatureMax}°C
                         </div>
                         <div className="flex items-center">
                           <Droplets className="h-4 w-4 mr-1 text-blue-600" />
-                          {species.humidity.min}-{species.humidity.max}%
+                          {s.humidityMin}-{s.humidityMax}%
                         </div>
                       </div>
                     </CardContent>

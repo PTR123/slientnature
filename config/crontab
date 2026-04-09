@@ -1,0 +1,18 @@
+# 自然不语项目 - 定时任务配置
+
+# 编辑此文件: crontab -e
+
+# 每天凌晨2点自动备份
+0 2 * * * /volume1/docker/ziranbuyu/scripts/backup.sh >> /volume1/docker/ziranbuyu/logs/backup.log 2>&1
+
+# 每5分钟健康检查
+*/5 * * * * /volume1/docker/ziranbuyu/scripts/monitor.sh >> /volume1/docker/ziranbuyu/logs/monitor.log 2>&1
+
+# 每天凌晨3点清理日志
+0 3 * * * /volume1/docker/ziranbuyu/scripts/log-manage.sh >> /volume1/docker/zrby/logs/cleanup.log 2>&1
+
+# 每周日凌晨4点清理Docker未使用资源
+0 4 * * 0 docker system prune -af --volumes >> /volume1/docker/ziranbuyu/logs/docker-cleanup.log 2>&1
+
+# 每小时检查SSL证书有效期
+0 */1 * * * certbot renew --quiet --post-hook "docker-compose -f /volume1/docker/ziranbuyu/docker-compose.yml restart nginx"

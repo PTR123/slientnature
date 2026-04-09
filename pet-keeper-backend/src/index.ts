@@ -11,6 +11,12 @@ import petsRoutes from './routes/pets.js';
 import postsRoutes from './routes/posts.js';
 import uploadRoutes from './routes/upload.js';
 import adminRoutes from './routes/admin.js';
+import productsRoutes from './routes/products.js';
+import categoriesRoutes from './routes/categories.js';
+import cartRoutes from './routes/cart.js';
+import ordersRoutes from './routes/orders.js';
+import paymentRoutes from './routes/payment.js';
+import addressesRoutes from './routes/addresses.js';
 
 // Middleware
 import { errorHandler } from './middleware/errorHandler.js';
@@ -23,7 +29,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware - CORS 配置
+// CORS 配置
 app.use(cors({
   origin: true, // 允许所有来源（开发环境）
   credentials: true,
@@ -31,10 +37,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// 添加请求日志（调试用）
+// 请求日志
 app.use((req, res, next) => {
-  console.log(`📝 ${new Date().toISOString()} - ${req.method} ${req.url}`);
-  console.log('Headers:', req.headers);
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   next();
 });
 
@@ -51,6 +56,12 @@ app.use('/api/pets', petsRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/products', productsRoutes);
+app.use('/api/categories', categoriesRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', ordersRoutes);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/addresses', addressesRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

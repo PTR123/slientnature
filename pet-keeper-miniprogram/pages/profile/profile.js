@@ -20,7 +20,7 @@ Page({
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
-        selected: 3
+        selected: 4 // 我的第5个tab
       })
     }
     this.loadData()
@@ -81,21 +81,32 @@ Page({
     })
   },
 
+  // 跳转到地址管理
+  goToAddresses() {
+    wx.navigateTo({
+      url: '/pages/address/list/list'
+    })
+  },
+
   // 编辑资料
   editProfile() {
-    util.showToast('功能开发中')
+    wx.navigateTo({
+      url: '/pages/profile/edit/edit'
+    })
   },
 
   // 设置
   openSettings() {
-    util.showToast('功能开发中')
+    wx.navigateTo({
+      url: '/pages/profile/settings/settings'
+    })
   },
 
   // 关于我们
   aboutUs() {
     wx.showModal({
-      title: '关于PetKeeper',
-      content: 'PetKeeper是一款专业的异宠饲养管理平台，致力于为异宠爱好者提供全面的饲养管理、物种科普和社区交流服务。',
+      title: '关于自然不语',
+      content: '自然不语是一款专注于自然生态与异宠文化的平台，致力于为用户提供专业的饲养管理、物种科普和社区交流服务，让自然之美在静默中诉说。',
       showCancel: false,
       confirmText: '知道了'
     })
@@ -105,7 +116,7 @@ Page({
   feedback() {
     wx.showModal({
       title: '反馈建议',
-      content: '如有问题或建议，请发送邮件至：feedback@petkeeper.com',
+      content: '如有问题或建议，请发送邮件至：feedback@ziranbuyu.com',
       showCancel: false,
       confirmText: '知道了'
     })

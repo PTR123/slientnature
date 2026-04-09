@@ -21,8 +21,18 @@ Page({
 
       const species = await speciesApi.getDetail(id)
 
+      // 后端已经解析了JSON数组，检查是否需要再次解析
+      const parsedSpecies = {
+        ...species,
+        dietList: Array.isArray(species.diet) ? species.diet : this.parseJsonArray(species.diet),
+        substrateList: Array.isArray(species.substrate) ? species.substrate : this.parseJsonArray(species.substrate),
+        decorList: Array.isArray(species.decor) ? species.decor : this.parseJsonArray(species.decor),
+        lifecycleList: Array.isArray(species.lifecycle) ? species.lifecycle : this.parseJsonArray(species.lifecycle),
+        diseasesList: Array.isArray(species.diseases) ? species.diseases : this.parseJsonArray(species.diseases)
+      }
+
       this.setData({
-        species,
+        species: parsedSpecies,
         loading: false
       })
 
@@ -36,6 +46,18 @@ Page({
       util.hideLoading()
       util.showToast('加载失败')
       this.setData({ loading: false })
+    }
+  },
+
+  // 解析JSON数组字符串
+  parseJsonArray(jsonStr) {
+    if (!jsonStr) return []
+    try {
+      const parsed = JSON.parse(jsonStr)
+      return Array.isArray(parsed) ? parsed : []
+    } catch (e) {
+      console.error('解析JSON数组失败:', e)
+      return []
     }
   },
 
@@ -64,6 +86,18 @@ Page({
       data: text,
       success: () => {
         util.showToast('已复制')
+      }
+    })
+  },
+
+  // 图片加载错误处理
+  onImageError(e) {
+    console.error('图片加载失败:', e.detail)
+    // 设置默认图片
+    this.setData({
+      species: {
+        ...this.data.species,
+        image: '/images/default-species.png'
       }
     })
   },

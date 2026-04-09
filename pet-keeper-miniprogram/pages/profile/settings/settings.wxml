@@ -1,0 +1,103 @@
+<!--pages/profile/settings/settings.wxml-->
+<view class="container settings-container">
+  <!-- 通知设置 -->
+  <view class="settings-section">
+    <view class="section-title">通知设置</view>
+
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="setting-icon">🔔</text>
+        <text>推送通知</text>
+      </view>
+      <switch checked="{{settings.notification}}" bindchange="onNotificationChange" color="#4a784a"/>
+    </view>
+
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="setting-icon">🔊</text>
+        <text>音效提示</text>
+      </view>
+      <switch checked="{{settings.sound}}" bindchange="onSoundChange" color="#4a784a"/>
+    </view>
+
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="setting-icon">📳</text>
+        <text>振动反馈</text>
+      </view>
+      <switch checked="{{settings.vibration}}" bindchange="onVibrationChange" color="#4a784a"/>
+    </view>
+  </view>
+
+  <!-- 显示设置 -->
+  <view class="settings-section">
+    <view class="section-title">显示设置</view>
+
+    <view class="setting-item">
+      <view class="setting-label">
+        <text class="setting-icon">🎬</text>
+        <text>自动播放视频</text>
+      </view>
+      <switch checked="{{settings.autoPlayVideo}}" bindchange="onAutoPlayChange" color="#4a784a"/>
+    </view>
+
+    <view class="setting-item picker-item">
+      <view class="setting-label">
+        <text class="setting-icon">🌐</text>
+        <text>语言</text>
+      </view>
+      <picker mode="selector" range="{{languages}}" range-key="label" value="{{languages[0].value === settings.language ? 0 : languages[1].value === settings.language ? 1 : 2}}" bindchange="onLanguageChange">
+        <view class="picker-value">
+          {{languages[0].value === settings.language ? languages[0].label : languages[1].value === settings.language ? languages[1].label : languages[2].label}} >
+        </view>
+      </picker>
+    </view>
+
+    <view class="setting-item picker-item">
+      <view class="setting-label">
+        <text class="setting-icon">🎨</text>
+        <text>主题</text>
+      </view>
+      <picker mode="selector" range="{{themes}}" range-key="label" value="{{themes[0].value === settings.theme ? 0 : themes[1].value === settings.theme ? 1 : 2}}" bindchange="onThemeChange">
+        <view class="picker-value">
+          {{themes[0].value === settings.theme ? themes[0].label : themes[1].value === settings.theme ? themes[1].label : themes[2].label}} >
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 其他设置 -->
+  <view class="settings-section">
+    <view class="section-title">其他</view>
+
+    <view class="menu-item" bindtap="checkUpdate">
+      <text class="menu-icon">🔄</text>
+      <text class="menu-label">检查更新</text>
+      <text class="menu-arrow">></text>
+    </view>
+
+    <view class="menu-item" bindtap="showUserAgreement">
+      <text class="menu-icon">📋</text>
+      <text class="menu-label">用户协议</text>
+      <text class="menu-arrow">></text>
+    </view>
+
+    <view class="menu-item" bindtap="showPrivacyPolicy">
+      <text class="menu-icon">🔒</text>
+      <text class="menu-label">隐私政策</text>
+      <text class="menu-arrow">></text>
+    </view>
+
+    <view class="menu-item" bindtap="showAbout">
+      <text class="menu-icon">ℹ️</text>
+      <text class="menu-label">关于小程序</text>
+      <text class="menu-arrow">></text>
+    </view>
+
+    <view class="menu-item" bindtap="feedback">
+      <text class="menu-icon">💬</text>
+      <text class="menu-label">反馈建议</text>
+      <text class="menu-arrow">></text>
+    </view>
+  </view>
+</view>

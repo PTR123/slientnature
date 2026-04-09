@@ -8,39 +8,58 @@
     "pages/pets/create/create",
     "pages/species/species",
     "pages/species/detail/detail",
+    "pages/shop/shop",
+    "pages/shop/detail/detail",
+    "pages/cart/cart",
+    "pages/orders/orders",
+    "pages/orders/checkout/checkout",
+    "pages/orders/detail/detail",
+    "pages/address/list/list",
+    "pages/address/edit/edit",
     "pages/community/community",
     "pages/community/detail/detail",
     "pages/community/create/create",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/profile/edit/edit",
+    "pages/profile/settings/settings",
+    "pages/debug/debug"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#4a784a",
-    "navigationBarTitleText": "PetKeeper",
+    "navigationBarTitleText": "自然不语",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#fefdfb"
   },
   "tabBar": {
-    "color": "#999999",
+    "color": "#8a8a8a",
     "selectedColor": "#4a784a",
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页"
+        "text": "馴页",
+        "iconPath": "assets/tabbar/home-normal.png",
+        "selectedIconPath": "assets/tabbar/home-selected.png"
       },
       {
         "pagePath": "pages/species/species",
-        "text": "图鉴"
+        "text": "图鉴",
+        "iconPath": "assets/tabbar/catalog-normal.png",
+        "selectedIconPath": "assets/tabbar/catalog-selected.png"
       },
       {
         "pagePath": "pages/community/community",
-        "text": "社区"
+        "text": "社区",
+        "iconPath": "assets/tabbar/community-normal.png",
+        "selectedIconPath": "assets/tabbar/community-selected.png"
       },
       {
         "pagePath": "pages/profile/profile",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "assets/tabbar/profile-normal.png",
+        "selectedIconPath": "assets/tabbar/profile-selected.png"
       }
     ]
   },

@@ -102,12 +102,46 @@
 .description-content,
 .care-content,
 .environment-content,
-.diet-content,
 .precautions-content {
   font-size: 28rpx;
   color: #666;
   line-height: 1.8;
   text-align: justify;
+}
+
+/* 列表样式 */
+.list-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 20rpx;
+  background-color: #f8f9fa;
+  border-radius: 12rpx;
+  border-left: 4rpx solid #4a784a;
+}
+
+.list-icon {
+  font-size: 32rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.list-text {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.6;
+  flex: 1;
+}
+
+/* 警告项样式 */
+.list-item-warning {
+  background-color: #fff3e0;
+  border-left-color: #f57c00;
 }
 
 /* 图集 */

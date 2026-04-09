@@ -1,0 +1,75 @@
+<!--pages/orders/checkout/checkout.wxml-->
+<view class="container checkout-container">
+  <!-- 商品信息 -->
+  <view class="section">
+    <view class="section-title">商品信息</view>
+    <view class="product-item" wx:for="{{items}}" wx:key="productId">
+      <image class="product-image" src="{{item.image || '/images/default-product.png'}}" mode="aspectFill"></image>
+      <view class="product-info">
+        <view class="product-name">{{item.name}}</view>
+        <view class="product-meta">
+          <text class="product-price">¥{{item.price}}</text>
+          <text class="product-quantity">x{{item.quantity}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 收货信息 -->
+  <view class="section">
+    <view class="section-header">
+      <view class="section-title">收货信息</view>
+      <view class="select-address-btn" bindtap="onSelectAddress">选择地址</view>
+    </view>
+
+    <view wx:if="{{selectedAddress}}" class="selected-address" bindtap="onSelectAddress">
+      <view class="address-header">
+        <text class="receiver-name">{{selectedAddress.receiverName}}</text>
+        <text class="receiver-phone">{{selectedAddress.receiverPhone}}</text>
+      </view>
+      <view class="address-detail">
+        {{selectedAddress.province}} {{selectedAddress.city}} {{selectedAddress.district}} {{selectedAddress.detail}}
+      </view>
+    </view>
+
+    <view wx:else>
+      <view class="form-item">
+        <text class="label">收货人</text>
+        <input class="input" placeholder="请输入收货人姓名" value="{{receiverName}}" bindinput="onInput" data-field="receiverName" />
+      </view>
+      <view class="form-item">
+        <text class="label">手机号</text>
+        <input class="input" type="number" placeholder="请输入手机号" value="{{receiverPhone}}" bindinput="onInput" data-field="receiverPhone" maxlength="11" />
+      </view>
+      <view class="form-item">
+        <text class="label">收货地址</text>
+        <textarea class="textarea" placeholder="请输入详细地址" value="{{receiverAddress}}" bindinput="onInput" data-field="receiverAddress" />
+      </view>
+      <view class="form-item">
+        <text class="label">备注</text>
+        <input class="input" placeholder="选填" value="{{remark}}" bindinput="onInput" data-field="remark" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单金额 -->
+  <view class="section">
+    <view class="amount-row">
+      <text>商品金额</text>
+      <text class="amount">¥{{totalAmount}}</text>
+    </view>
+    <view class="amount-row total">
+      <text>合计</text>
+      <text class="amount">¥{{totalAmount}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="total-info">
+      <text>应付金额：</text>
+      <text class="total-price">¥{{totalAmount}}</text>
+    </view>
+    <button class="submit-btn" bindtap="submitOrder" loading="{{submitting}}">提交订单</button>
+  </view>
+</view>

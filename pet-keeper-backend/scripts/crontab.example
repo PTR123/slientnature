@@ -1,0 +1,11 @@
+# 定时备份任务配置
+# 使用crontab -e添加以下内容
+
+# 每天凌晨2点备份
+0 2 * * * /app/scripts/backup.sh >> /var/log/backup.log 2>&1
+
+# 每周日凌晨3点备份
+0 3 * * 0 /app/scripts/backup.sh >> /var/log/backup.log 2>&1
+
+# 每月1号凌晨4点备份
+0 4 1 * * /app/scripts/backup.sh >> /var/log/backup.log 2>&1

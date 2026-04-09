@@ -45,11 +45,14 @@ router.post('/image', authenticate, upload.single('image'), (req: AuthRequest, r
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    // 返回完整的URL
+    const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3001}`;
+    const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
 
     res.json({
       url: imageUrl,
-      filename: req.file.filename
+      filename: req.file.filename,
+      path: `/uploads/${req.file.filename}`
     });
   } catch (error) {
     console.error('Upload error:', error);

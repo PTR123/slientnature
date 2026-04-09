@@ -3,9 +3,9 @@
   <!-- 未登录状态 -->
   <view wx:if="{{!userInfo}}" class="welcome-section">
     <view class="welcome-content">
-      <image class="welcome-logo" src="/images/logo.png" mode="aspectFit"></image>
-      <view class="welcome-title">PetKeeper</view>
-      <view class="welcome-desc">专业的异宠饲养管理平台</view>
+      <image class="welcome-logo" src="/images/default-product.png" mode="aspectFit"></image>
+      <view class="welcome-title">自然不语</view>
+      <view class="welcome-desc">自然之美，静默如语</view>
       <button class="btn-primary welcome-btn" bindtap="goToLogin">立即登录</button>
     </view>
   </view>

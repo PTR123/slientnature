@@ -1,9 +1,9 @@
 <!--pages/login/login.wxml-->
 <view class="container login-container">
   <view class="login-header">
-    <image class="login-logo" src="/images/logo.png" mode="aspectFit"></image>
+    <image class="login-logo" src="/images/default-product.png" mode="aspectFit"></image>
     <view class="login-title">欢迎回来</view>
-    <view class="login-subtitle">登录您的 PetKeeper 账号</view>
+    <view class="login-subtitle">登录您的自然不语账号</view>
   </view>
 
   <view class="login-form">

@@ -103,10 +103,15 @@ export default function SpeciesDetailClient({ species }: SpeciesDetailClientProp
       {/* Hero Section */}
       <div className="relative h-96 bg-gradient-to-br from-forest-900 to-forest-700">
         <Image
-          src={species.image}
+          src={species.image || 'https://via.placeholder.com/800x600?text=No+Image'}
           alt={species.name}
           fill
           className="object-cover opacity-40"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = 'https://via.placeholder.com/800x600?text=No+Image';
+          }}
+          unoptimized={species.image?.startsWith('http://localhost:3001')}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8">
@@ -292,35 +297,50 @@ export default function SpeciesDetailClient({ species }: SpeciesDetailClientProp
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {species.diseases.map((disease, index) => (
-                    <div
-                      key={index}
-                      className="border border-cream-200 rounded-lg p-4 bg-cream-50"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-semibold text-forest-950">{disease.name}</h4>
-                        {disease.vetRequired && (
-                          <Badge variant="destructive" className="ml-2">
-                            需就医
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="space-y-2 text-sm">
-                        <div>
-                          <p className="text-forest-600 mb-1">症状:</p>
-                          <ul className="list-disc list-inside text-forest-700">
-                            {disease.symptoms.map((symptom, i) => (
-                              <li key={i}>{symptom}</li>
-                            ))}
-                          </ul>
+                  {species.diseases.map((disease, index) => {
+                    // 支持字符串和对象两种格式
+                    if (typeof disease === 'string') {
+                      return (
+                        <div
+                          key={index}
+                          className="border border-cream-200 rounded-lg p-4 bg-cream-50"
+                        >
+                          <h4 className="font-semibold text-forest-950">{disease}</h4>
                         </div>
-                        <div>
-                          <p className="text-forest-600 mb-1">处理建议:</p>
-                          <p className="text-forest-700">{disease.treatment}</p>
+                      );
+                    }
+
+                    // 对象格式：包含详细信息
+                    return (
+                      <div
+                        key={index}
+                        className="border border-cream-200 rounded-lg p-4 bg-cream-50"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <h4 className="font-semibold text-forest-950">{disease.name}</h4>
+                          {disease.vetRequired && (
+                            <Badge variant="destructive" className="ml-2">
+                              需就医
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="space-y-2 text-sm">
+                          <div>
+                            <p className="text-forest-600 mb-1">症状:</p>
+                            <ul className="list-disc list-inside text-forest-700">
+                              {disease.symptoms.map((symptom, i) => (
+                                <li key={i}>{symptom}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <p className="text-forest-600 mb-1">处理建议:</p>
+                            <p className="text-forest-700">{disease.treatment}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>

@@ -11,8 +11,9 @@
 }
 
 .form-item {
-  margin-bottom: 40rpx;
+  margin-bottom: 50rpx;
   position: relative;
+  padding-bottom: 10rpx;
 }
 
 .form-label {
@@ -45,14 +46,16 @@
   font-size: 28rpx;
   line-height: 1.6;
   box-sizing: border-box;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .char-count {
-  position: absolute;
-  right: 0;
-  bottom: -30rpx;
+  display: block;
+  text-align: right;
   font-size: 22rpx;
   color: #999;
+  margin-top: 8rpx;
 }
 
 /* 图片列表 */
