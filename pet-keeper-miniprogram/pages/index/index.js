@@ -14,10 +14,13 @@ Page({
       { id: 'bird', name: '鸟类', icon: '🦜' },
       { id: 'exotic', name: '异宠', icon: '🦔' }
     ],
-    loading: true
+    loading: false,
+    dataLoading: false  // 新增：数据加载状态
   },
 
   onLoad() {
+    // 立即显示页面，不等待数据加载完成
+    this.setData({ loading: false })
     this.loadData()
   },
 
@@ -36,25 +39,44 @@ Page({
 
       // 检查登录状态
       if (app.isLoggedIn()) {
+        // 立即显示用户信息，不等待其他数据
         this.setData({ userInfo: app.globalData.userInfo })
 
-        // 并行加载数据
+        // 并行加载数据，使用加载状态指示器
+        this.setData({ dataLoading: true })
+
         const [pets, posts] = await Promise.all([
-          petApi.getList(),
-          postApi.getList({ limit: 3, sort: 'hot' })
+          petApi.getList().catch(err => {
+            console.error('获取宠物列表失败:', err)
+            return []
+          }),
+          postApi.getList({ limit: 3, sort: 'hot' }).catch(err => {
+            console.error('获取帖子列表失败:', err)
+            return []
+          })
         ])
 
         this.setData({
           pets: pets.slice(0, 3),
           recentPosts: posts,
-          loading: false
+          dataLoading: false  // 数据加载完成
         })
       } else {
-        this.setData({ loading: false })
+        // 未登录也要正常显示页面
+        this.setData({
+          userInfo: null,
+          pets: [],
+          recentPosts: []
+        })
       }
     } catch (err) {
       console.error('加载数据失败:', err)
-      this.setData({ loading: false })
+      this.setData({
+        userInfo: null,
+        pets: [],
+        recentPosts: [],
+        dataLoading: false
+      })
     }
   },
 

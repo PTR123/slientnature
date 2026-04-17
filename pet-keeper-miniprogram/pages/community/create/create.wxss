@@ -30,7 +30,9 @@
 
 .form-input {
   width: 100%;
-  padding: 24rpx;
+  height: 80rpx; /* 添加明确高度 */
+  padding: 0 24rpx; /* 调整padding */
+  line-height: 80rpx; /* 行高与高度一致 */
   background-color: #f5f5f5;
   border-radius: 12rpx;
   font-size: 28rpx;

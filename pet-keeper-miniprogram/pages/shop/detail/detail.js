@@ -46,6 +46,24 @@ Page({
   async addToCart() {
     const { product, quantity } = this.data
 
+    // ✅ 检查登录状态
+    const app = getApp()
+    if (!app.isLoggedIn()) {
+      wx.showModal({
+        title: '提示',
+        content: '请先登录后再加入购物车',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/login'
+            })
+          }
+        }
+      })
+      return
+    }
+
     try {
       await request('/cart', 'POST', {
         productId: product.id,

@@ -177,3 +177,14 @@
   color: #999;
   margin-bottom: 20rpx;
 }
+
+/* 加载状态 */
+.loading-state {
+  padding: 40rpx 0;
+  text-align: center;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+}

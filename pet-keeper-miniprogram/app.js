@@ -3,7 +3,8 @@ App({
   globalData: {
     userInfo: null,
     token: null,
-    apiBaseUrl: 'http://192.168.3.20:3001/api' // 本地测试地址
+    // ⚠️ 修复：使用正确的局域网IP地址
+    apiBaseUrl: 'http://10.81.214.231:3001/api' // 本地测试地址（已修复IP地址）
   },
 
   onLaunch() {

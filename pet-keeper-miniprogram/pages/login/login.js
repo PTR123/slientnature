@@ -195,7 +195,7 @@ Page({
     util.hideLoading()
     util.showToast('登录成功', 'success')
 
-    // 返回上一页或跳转首页
+    // 返回上一页或跳转首页（减少延迟时间）
     setTimeout(() => {
       const pages = getCurrentPages()
       if (pages.length > 1) {
@@ -203,7 +203,7 @@ Page({
       } else {
         wx.switchTab({ url: '/pages/index/index' })
       }
-    }, 1500)
+    }, 300) // 优化：从1500ms减少到300ms，提升用户体验
   },
 
   // 跳转注册

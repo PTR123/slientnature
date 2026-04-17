@@ -28,7 +28,9 @@
 
 .form-input {
   width: 100%;
-  padding: 24rpx;
+  height: 80rpx; /* 添加明确的高度 */
+  padding: 0 24rpx; /* 调整padding，只保留左右 */
+  line-height: 80rpx; /* 添加行高，使文字居中 */
   background-color: #f5f5f5;
   border-radius: 12rpx;
   font-size: 28rpx;
@@ -39,24 +41,34 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24rpx;
+  height: 80rpx; /* 与输入框高度一致 */
+  padding: 0 24rpx; /* 左右padding */
   background-color: #f5f5f5;
   border-radius: 12rpx;
 }
 
 .picker-value {
+  flex: 1; /* 占据剩余空间 */
+  height: 80rpx; /* 与容器高度一致 */
+  line-height: 80rpx; /* 文字在80rpx高度中居中，和输入框一样 */
   font-size: 28rpx;
   color: #333;
 }
 
 .picker-placeholder {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx; /* 文字居中 */
   font-size: 28rpx;
   color: #999;
 }
 
 .picker-arrow {
+  height: 80rpx; /* 与容器高度一致 */
+  line-height: 80rpx; /* 箭头居中 */
   font-size: 28rpx;
   color: #999;
+  padding-left: 12rpx; /* 与文字保持间距 */
 }
 
 .form-textarea {

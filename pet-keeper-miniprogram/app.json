@@ -39,7 +39,7 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "馴页",
+        "text": "首页",
         "iconPath": "assets/tabbar/home-normal.png",
         "selectedIconPath": "assets/tabbar/home-selected.png"
       },
@@ -56,6 +56,12 @@
         "selectedIconPath": "assets/tabbar/community-selected.png"
       },
       {
+        "pagePath": "pages/shop/shop",
+        "text": "商城",
+        "iconPath": "assets/tabbar/shop-normal.png",
+        "selectedIconPath": "assets/tabbar/shop-selected.png"
+      },
+      {
         "pagePath": "pages/profile/profile",
         "text": "我的",
         "iconPath": "assets/tabbar/profile-normal.png",
@@ -65,6 +71,7 @@
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
   "permission": {
     "scope.userLocation": {
       "desc": "你的位置信息将用于小程序位置接口的效果展示"

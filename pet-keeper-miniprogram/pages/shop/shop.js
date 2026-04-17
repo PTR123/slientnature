@@ -21,9 +21,10 @@ Page({
   },
 
   onShow() {
+    // ✅ 更新tabBar选中状态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
-        selected: 2 // 商城是第3个tab
+        selected: 3 // 商城是第4个tab（社区在index=2）
       })
     }
     this.loadCartCount() // 每次显示都更新购物车数量
@@ -113,6 +114,24 @@ Page({
   async addToCart(e) {
     const { id } = e.currentTarget.dataset
 
+    // ✅ 检查是否登录
+    const app = getApp()
+    if (!app.isLoggedIn()) {
+      wx.showModal({
+        title: '提示',
+        content: '请先登录后再加入购物车',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/login'
+            })
+          }
+        }
+      })
+      return
+    }
+
     try {
       await request('/cart', 'POST', { productId: id, quantity: 1 })
       util.showToast('已加入购物车', 'success')
@@ -132,7 +151,25 @@ Page({
 
   // 跳转购物车
   goToCart() {
-    wx.switchTab({
+    // ✅ 检查是否登录
+    const app = getApp()
+    if (!app.isLoggedIn()) {
+      wx.showModal({
+        title: '提示',
+        content: '请先登录后查看购物车',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/login'
+            })
+          }
+        }
+      })
+      return
+    }
+
+    wx.navigateTo({
       url: '/pages/cart/cart'
     })
   },
@@ -140,11 +177,20 @@ Page({
   // 加载购物车数量
   async loadCartCount() {
     try {
+      const app = getApp()
+
+      // ✅ 先检查是否登录，未登录时不请求购物车
+      if (!app.isLoggedIn()) {
+        this.setData({ cartCount: 0 })
+        return
+      }
+
       const cart = await request('/cart', 'GET')
       const count = cart.items.reduce((sum, item) => sum + item.quantity, 0)
       this.setData({ cartCount: count })
     } catch (err) {
       console.error('加载购物车数量失败:', err)
+      this.setData({ cartCount: 0 }) // ✅ 失败时设置为0，避免显示错误
     }
   },
 

@@ -15,6 +15,28 @@ Page({
   },
 
   onLoad(options) {
+    // ✅ 检查登录状态
+    const app = getApp()
+    if (!app.isLoggedIn()) {
+      wx.showModal({
+        title: '提示',
+        content: '请先登录后再结算',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/login'
+            })
+          } else {
+            wx.switchTab({
+              url: '/pages/shop/shop'
+            })
+          }
+        }
+      })
+      return
+    }
+
     // 接收商品信息
     const { items, totalAmount } = options
     if (items) {

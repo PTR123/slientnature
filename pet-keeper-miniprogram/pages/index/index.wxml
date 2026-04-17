@@ -3,7 +3,7 @@
   <!-- 未登录状态 -->
   <view wx:if="{{!userInfo}}" class="welcome-section">
     <view class="welcome-content">
-      <image class="welcome-logo" src="/images/default-product.png" mode="aspectFit"></image>
+      <image class="welcome-logo" src="/images/logo.png" mode="aspectFit"></image>
       <view class="welcome-title">自然不语</view>
       <view class="welcome-desc">自然之美，静默如语</view>
       <button class="btn-primary welcome-btn" bindtap="goToLogin">立即登录</button>
@@ -36,7 +36,12 @@
         <view class="section-more" bindtap="goToAddPet">+ 添加</view>
       </view>
 
-      <view wx:if="{{pets.length === 0}}" class="empty-state">
+      <!-- 数据加载中 -->
+      <view wx:if="{{dataLoading && pets.length === 0}}" class="loading-state">
+        <view class="loading-text">正在加载...</view>
+      </view>
+
+      <view wx:elif="{{pets.length === 0}}" class="empty-state">
         <view class="empty-text">还没有宠物档案</view>
         <button class="btn-secondary" bindtap="goToAddPet">创建第一个宠物</button>
       </view>
@@ -65,7 +70,12 @@
         <navigator class="section-more" url="/pages/community/community">更多 ></navigator>
       </view>
 
-      <view wx:if="{{recentPosts.length === 0}}" class="empty-state">
+      <!-- 数据加载中 -->
+      <view wx:if="{{dataLoading && recentPosts.length === 0}}" class="loading-state">
+        <view class="loading-text">正在加载...</view>
+      </view>
+
+      <view wx:elif="{{recentPosts.length === 0}}" class="empty-state">
         <view class="empty-text">暂无帖子</view>
       </view>
 

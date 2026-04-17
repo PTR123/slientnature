@@ -3,7 +3,8 @@ App({
   globalData: {
     userInfo: null,
     token: null,
-    apiBaseUrl: 'http://localhost:3001/api' // 本地测试地址
+    // ⚠️ 修复：从内网地址改为localhost，提升响应速度
+    apiBaseUrl: 'http://localhost:3001/api' // 本地测试地址（修复性能问题）
   },
 
   onLaunch() {

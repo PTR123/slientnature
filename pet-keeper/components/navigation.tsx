@@ -33,9 +33,9 @@ export default function Navigation() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="rounded-lg bg-forest-600 p-2 transition-transform group-hover:scale-105">
-              <Leaf className="h-5 w-5 text-white" />
+              <img src="/images/logo.png" alt="自然不语" className="h-5 w-5 object-contain" />
             </div>
-            <span className="font-display text-xl font-bold text-forest-900">PetKeeper</span>
+            <span className="font-display text-xl font-bold text-forest-900">自然不语</span>
           </Link>
 
           {/* Desktop Navigation */}

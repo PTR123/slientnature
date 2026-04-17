@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'PetKeeper - 异宠饲养管理平台',
+  title: '自然不语 - 异宠饲养管理平台',
   description: '专业的异宠饲养记录、物种图鉴与社区交流平台'
 };
 

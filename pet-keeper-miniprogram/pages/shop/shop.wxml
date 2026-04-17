@@ -2,7 +2,6 @@
 <view class="container shop-container">
   <!-- 搜索栏 -->
   <view class="search-bar">
-    <button class="search-btn" bindtap="onSearch">搜索</button>
     <input
       class="search-input"
       placeholder="搜索商品"
@@ -10,6 +9,7 @@
       bindinput="onSearchInput"
       bindconfirm="onSearch"
     />
+    <button class="search-btn" bindtap="onSearch">搜索</button>
     <view class="cart-icon" bindtap="goToCart">
       <image src="/images/cart-icon.png" class="cart-img"></image>
       <text class="cart-badge" wx:if="{{cartCount > 0}}">{{cartCount}}</text>

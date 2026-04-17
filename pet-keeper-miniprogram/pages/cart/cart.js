@@ -20,6 +20,29 @@ Page({
 
   async loadCart() {
     try {
+      // ✅ 检查登录状态
+      const app = getApp()
+      if (!app.isLoggedIn()) {
+        wx.showModal({
+          title: '提示',
+          content: '请先登录后查看购物车',
+          confirmText: '去登录',
+          success: (res) => {
+            if (res.confirm) {
+              wx.navigateTo({
+                url: '/pages/login/login'
+              })
+            } else {
+              wx.switchTab({
+                url: '/pages/shop/shop'
+              })
+            }
+          }
+        })
+        this.setData({ loading: false })
+        return
+      }
+
       const cart = await request('/cart', 'GET')
 
       this.setData({

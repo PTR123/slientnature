@@ -36,10 +36,10 @@
         bindchange="onSpeciesChange"
       >
         <view class="form-picker">
-          <text class="{{formData.species ? 'picker-value' : 'picker-placeholder'}}">
+          <view class="{{formData.species ? 'picker-value' : 'picker-placeholder'}}">
             {{formData.species || '请选择物种'}}
-          </text>
-          <text class="picker-arrow">›</text>
+          </view>
+          <view class="picker-arrow">›</view>
         </view>
       </picker>
     </view>
@@ -68,10 +68,10 @@
         bindchange="onGenderChange"
       >
         <view class="form-picker">
-          <text class="picker-value">
+          <view class="picker-value">
             {{genderOptions[genderIndex].label}}
-          </text>
-          <text class="picker-arrow">›</text>
+          </view>
+          <view class="picker-arrow">›</view>
         </view>
       </picker>
     </view>
@@ -87,10 +87,10 @@
         bindchange="onBirthDateChange"
       >
         <view class="form-picker">
-          <text class="{{formData.birthDate ? 'picker-value' : 'picker-placeholder'}}">
+          <view class="{{formData.birthDate ? 'picker-value' : 'picker-placeholder'}}">
             {{formData.birthDate || '请选择出生日期'}}
-          </text>
-          <text class="picker-arrow">›</text>
+          </view>
+          <view class="picker-arrow">›</view>
         </view>
       </picker>
     </view>

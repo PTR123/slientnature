@@ -19,7 +19,7 @@ Page({
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
-        selected: 3 // 社区是第4个tab
+        selected: 2 // ✅ 社区是第3个tab（index=2）
       })
     }
   },

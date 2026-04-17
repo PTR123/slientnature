@@ -55,6 +55,9 @@
 .picker-value {
   color: #4a784a;
   font-size: 14px;
+  height: 40px; /* 设置高度 */
+  line-height: 40px; /* view直接包含文字，用line-height居中 */
+  padding-right: 8px; /* 右侧留出箭头空间 */
 }
 
 /* 菜单项 */

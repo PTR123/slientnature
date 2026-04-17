@@ -3,6 +3,9 @@
 
 const app = getApp()
 
+// 生产环境禁用日志，提升性能
+const isDev = false // ⚠️ 生产环境设置为false，开发环境改为true
+
 /**
  * 封装的请求方法
  */
@@ -10,12 +13,15 @@ function request(url, method = 'GET', data = {}) {
   return new Promise((resolve, reject) => {
     const token = app.globalData.token
 
-    console.log('🚀 API Request:', {
-      url: `${app.globalData.apiBaseUrl}${url}`,
-      method,
-      data,
-      hasToken: !!token
-    })
+    // 只在开发环境输出日志（减少性能影响）
+    if (isDev) {
+      console.log('🚀 API Request:', {
+        url: `${app.globalData.apiBaseUrl}${url}`,
+        method,
+        data,
+        hasToken: !!token
+      })
+    }
 
     wx.request({
       url: `${app.globalData.apiBaseUrl}${url}`,
@@ -25,40 +31,56 @@ function request(url, method = 'GET', data = {}) {
         'Content-Type': 'application/json',
         'Authorization': token ? `Bearer ${token}` : ''
       },
+      timeout: 10000, // 优化：从30秒减少到10秒，失败时快速反馈
       success(res) {
-        console.log('✅ API Response:', res)
+        // 只在开发环境输出日志
+        if (isDev) {
+          console.log('✅ API Response:', res)
+        }
 
         if (res.statusCode === 200) {
           resolve(res.data)
         } else if (res.statusCode === 401) {
           // 未授权
-          console.error('❌ 401 Unauthorized:', res.data)
+          if (isDev) {
+            console.error('❌ 401 Unauthorized:', res.data)
+          }
           const errorMsg = res.data.error || res.data.message || '未授权，请登录'
           reject(new Error(errorMsg))
         } else if (res.statusCode === 400) {
           // 参数错误
-          console.error('❌ 400 Bad Request:', res.data)
+          if (isDev) {
+            console.error('❌ 400 Bad Request:', res.data)
+          }
           const errorMsg = res.data.error || '请求参数错误'
           reject(new Error(errorMsg))
         } else if (res.statusCode === 404) {
           // 资源不存在
-          console.error('❌ 404 Not Found:', res.data)
+          if (isDev) {
+            console.error('❌ 404 Not Found:', res.data)
+          }
           const errorMsg = res.data.error || '请求的资源不存在'
           reject(new Error(errorMsg))
         } else if (res.statusCode === 500) {
           // 服务器错误
-          console.error('❌ 500 Server Error:', res.data)
+          if (isDev) {
+            console.error('❌ 500 Server Error:', res.data)
+          }
           const errorMsg = res.data.error || '服务器错误，请稍后重试'
           reject(new Error(errorMsg))
         } else {
           // 其他错误
-          console.error('❌ API Error:', res)
+          if (isDev) {
+            console.error('❌ API Error:', res)
+          }
           const errorMsg = res.data.error || res.data.message || `请求失败(${res.statusCode})`
           reject(new Error(errorMsg))
         }
       },
       fail(err) {
-        console.error('❌ Network Error:', err)
+        if (isDev) {
+          console.error('❌ Network Error:', err)
+        }
         const errorMsg = err.errMsg || '网络连接失败，请检查网络设置'
         reject(new Error(errorMsg))
       }
@@ -80,6 +102,7 @@ function uploadImage(filePath) {
       header: {
         'Authorization': `Bearer ${token}`
       },
+      timeout: 60000, // 上传文件设置60秒超时
       success(res) {
         try {
           const data = JSON.parse(res.data)
