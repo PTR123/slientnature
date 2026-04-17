@@ -1,0 +1,7 @@
+# Nixpacks配置文件 - Railway自动检测构建配置
+
+[start]
+cmd = "npm run start"
+
+[build]
+cmd = "npm run build"
