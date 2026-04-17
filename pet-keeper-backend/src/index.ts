@@ -29,13 +29,54 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS 配置
-app.use(cors({
-  origin: true, // 允许所有来源（开发环境）
+// CORS 配置 - 支持Vercel前端和本地开发
+const corsOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+  : ['http://localhost:3000', 'http://localhost:5173']; // 默认允许本地开发
+
+// 生产环境允许所有Vercel域名(动态生成)
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // 允许无origin的请求(移动端、服务器间调用)
+    if (!origin) return callback(null, true);
+
+    // 开发环境允许所有来源
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+
+    // 生产环境检查白名单
+    // Vercel域名格式: *.vercel.app 或自定义域名
+    const allowedOrigins = [
+      ...corsOrigins,
+      // 自动允许Vercel部署域名
+      /\.vercel\.app$/,  // 匹配所有 *.vercel.app
+    ];
+
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') {
+        return origin === allowed;
+      } else if (allowed instanceof RegExp) {
+        return allowed.test(origin);
+      }
+      return false;
+    });
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 600, // 预检请求缓存10分钟
+};
+
+app.use(cors(corsOptions));
 
 // 请求日志
 app.use((req, res, next) => {

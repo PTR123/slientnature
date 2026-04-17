@@ -113,6 +113,177 @@ async function main() {
 
   console.log(`✅ Created user: ${user.username}`);
 
+  // Create product categories
+  const categories = await Promise.all([
+    prisma.productCategory.upsert({
+      where: { id: 'cat-food' },
+      update: {},
+      create: {
+        id: 'cat-food',
+        name: '饲料食品',
+        description: '各种宠物专用饲料和营养补充剂',
+        image: 'https://images.unsplash.com/photo-1568640347083-2f5e5c1f8c1e?w=400',
+        sortOrder: 1
+      }
+    }),
+    prisma.productCategory.upsert({
+      where: { id: 'cat-housing' },
+      update: {},
+      create: {
+        id: 'cat-housing',
+        name: '饲养箱具',
+        description: '饲养箱、加热设备、照明设备等',
+        image: 'https://images.unsplash.com/photo-1585155770913-4a6b2d3f7e2a?w=400',
+        sortOrder: 2
+      }
+    }),
+    prisma.productCategory.upsert({
+      where: { id: 'cat-accessories' },
+      update: {},
+      create: {
+        id: 'cat-accessories',
+        name: '配件装饰',
+        description: '躲避屋、造景材料、装饰配件等',
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
+        sortOrder: 3
+      }
+    }),
+    prisma.productCategory.upsert({
+      where: { id: 'cat-health' },
+      update: {},
+      create: {
+        id: 'cat-health',
+        name: '健康护理',
+        description: '医疗用品、保健品、清洁用品等',
+        image: 'https://images.unsplash.com/photo-1584308666744-24d5c1f9c0e6?w=400',
+        sortOrder: 4
+      }
+    })
+  ]);
+
+  console.log(`✅ Created ${categories.length} categories`);
+
+  // Create sample products
+  const products = await Promise.all([
+    prisma.product.upsert({
+      where: { id: 'prod-jelly' },
+      update: {},
+      create: {
+        id: 'prod-jelly',
+        name: '甲虫专用果冻（高蛋白）',
+        description: '富含蛋白质和维生素，适合甲虫成虫食用',
+        content: '优质甲虫果冻，采用天然原料制作，富含蛋白质、维生素和矿物质，促进甲虫健康成长。',
+        categoryId: 'cat-food',
+        images: JSON.stringify(['https://images.unsplash.com/photo-1568640347083-2f5e5c1f8c1e?w=800']),
+        price: 15.00,
+        originalPrice: 20.00,
+        stock: 100,
+        sales: 50,
+        unit: '个',
+        isHot: true,
+        isNew: false,
+        isRecommend: true,
+        sortOrder: 1
+      }
+    }),
+    prisma.product.upsert({
+      where: { id: 'prod-cricket' },
+      update: {},
+      create: {
+        id: 'prod-cricket',
+        name: '活体蟋蟀（小型）',
+        description: '营养丰富，适合守宫、螳螂等小型爬宠',
+        content: '活体蟋蟀，高蛋白低脂肪，是守宫、螳螂等爬宠的理想食物来源。',
+        categoryId: 'cat-food',
+        images: JSON.stringify(['https://images.unsplash.com/photo-1596178060671-77c2b5c4f7e4?w=800']),
+        price: 30.00,
+        stock: 200,
+        sales: 80,
+        unit: '盒（50只）',
+        isHot: true,
+        isNew: false,
+        sortOrder: 2
+      }
+    }),
+    prisma.product.upsert({
+      where: { id: 'prod-tank' },
+      update: {},
+      create: {
+        id: 'prod-tank',
+        name: '亚克力饲养箱（中型）',
+        description: '30x20x20cm，适合甲虫饲养',
+        content: '透明亚克力材质，便于观察，透气性好，带有防逃逸设计。',
+        categoryId: 'cat-housing',
+        images: JSON.stringify(['https://images.unsplash.com/photo-1585155770913-4a6b2d3f7e2a?w=800']),
+        price: 89.00,
+        originalPrice: 120.00,
+        stock: 50,
+        sales: 30,
+        unit: '个',
+        isHot: false,
+        isNew: true,
+        isRecommend: true,
+        sortOrder: 1
+      }
+    }),
+    prisma.product.upsert({
+      where: { id: 'prod-heater' },
+      update: {},
+      create: {
+        id: 'prod-heater',
+        name: '爬宠加热垫（小型）',
+        description: '恒温加热，安全可靠',
+        content: '智能恒温控制，安全加热，适合爬宠饲养箱使用。',
+        categoryId: 'cat-housing',
+        images: JSON.stringify(['https://images.unsplash.com/photo-1584308666744-24d5c1f9c0e6?w=800']),
+        price: 65.00,
+        stock: 80,
+        sales: 45,
+        unit: '个',
+        isHot: true,
+        sortOrder: 2
+      }
+    }),
+    prisma.product.upsert({
+      where: { id: 'prod-hide' },
+      update: {},
+      create: {
+        id: 'prod-hide',
+        name: '树洞躲避屋',
+        description: '天然材质，适合守宫、螳螂躲避',
+        content: '采用天然树干制作，提供安全的躲避空间，满足宠物天性需求。',
+        categoryId: 'cat-accessories',
+        images: JSON.stringify(['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800']),
+        price: 45.00,
+        stock: 60,
+        sales: 25,
+        unit: '个',
+        isNew: true,
+        sortOrder: 1
+      }
+    }),
+    prisma.product.upsert({
+      where: { id: 'prod-mite' },
+      update: {},
+      create: {
+        id: 'prod-mite',
+        name: '甲虫除螨喷雾',
+        description: '有效去除螨虫，安全无害',
+        content: '专为甲虫研发的除螨喷雾，安全有效，不伤害甲虫。',
+        categoryId: 'cat-health',
+        images: JSON.stringify(['https://images.unsplash.com/photo-1584308666744-24d5c1f9c0e6?w=800']),
+        price: 35.00,
+        stock: 40,
+        sales: 20,
+        unit: '瓶',
+        isRecommend: true,
+        sortOrder: 1
+      }
+    })
+  ]);
+
+  console.log(`✅ Created ${products.length} products`);
+
   console.log('🎉 Seed completed!');
 }
 
