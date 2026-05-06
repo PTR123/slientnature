@@ -7,7 +7,6 @@ export const initRedis = () => {
   if (process.env.REDIS_URL) {
     redis = new Redis(process.env.REDIS_URL, {
       maxRetriesPerRequest: 3,
-      retryDelayOnFailover: 100,
       lazyConnect: true,
     });
 

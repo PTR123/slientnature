@@ -9,7 +9,11 @@ import { Button } from '@/components/ui/button';
 import { Thermometer, Droplets, Search, Filter } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { getDifficultyLabel, getDifficultyColor } from '@/lib/utils';
+
+const difficultyLabels: Record<string, string> = { easy: '简单', medium: '中等', hard: '困难' };
+const difficultyColors: Record<string, string> = { easy: 'bg-green-100 text-green-800', medium: 'bg-yellow-100 text-yellow-800', hard: 'bg-red-100 text-red-800' };
+const getDifficultyLabel = (d: string) => difficultyLabels[d] || d;
+const getDifficultyColor = (d: string) => difficultyColors[d] || '';
 
 export default function SpeciesPage() {
   const [species, setSpecies] = useState([]);

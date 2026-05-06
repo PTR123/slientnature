@@ -12,6 +12,7 @@ model User {
   id        String   @id @default(uuid())
   email     String?  @unique  // 改为可选，支持手机号登录
   phone     String?  @unique  // 新增手机号字段
+  appleId   String?  @unique  // Apple Sign In
   username  String   @unique
   password  String?           // 改为可选，支持微信登录
   avatar    String?

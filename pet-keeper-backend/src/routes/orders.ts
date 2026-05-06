@@ -341,7 +341,8 @@ router.get('/admin/stats', authenticate, requireAdmin, async (req: AuthRequest, 
     };
 
     stats.forEach(stat => {
-      result[stat.status] = {
+      const status = stat.status as keyof typeof result;
+      result[status] = {
         count: stat._count,
         amount: stat._sum.totalAmount || 0
       };

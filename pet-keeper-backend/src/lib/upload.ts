@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import multer from 'multer';
 import sharp from 'sharp';
-import { fileTypeFromBuffer } from 'file-type';
+import FileType from 'file-type';
 import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
@@ -71,7 +71,7 @@ const fileFilter = async (
 
     // 验证真实文件类型
     const buffer = await streamToBuffer(file.stream);
-    const fileType = await fileTypeFromBuffer(buffer);
+    const fileType = await FileType.fromBuffer(buffer);
 
     if (!fileType || !ALLOWED_MIME_TYPES.includes(fileType.mime)) {
       return cb(new Error('文件类型验证失败'));

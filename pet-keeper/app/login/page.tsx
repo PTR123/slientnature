@@ -308,11 +308,6 @@ export default function LoginPage() {
             微信扫码登录
           </Button>
 
-          {loginType === 'email' && (
-            <div className="text-center text-sm text-forest-600 mt-4">
-              测试账号：test@example.com / password123
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>

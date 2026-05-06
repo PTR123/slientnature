@@ -32,8 +32,8 @@ export default function Navigation() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
-            <div className="rounded-lg bg-forest-600 p-2 transition-transform group-hover:scale-105">
-              <img src="/images/logo.png" alt="自然不语" className="h-5 w-5 object-contain" />
+            <div className="transition-transform group-hover:scale-105">
+              <img src="/images/logo.png" alt="自然不语" className="h-6 w-6 object-contain" />
             </div>
             <span className="font-display text-xl font-bold text-forest-900">自然不语</span>
           </Link>

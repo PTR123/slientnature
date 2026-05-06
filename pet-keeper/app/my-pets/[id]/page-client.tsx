@@ -224,7 +224,7 @@ export default function PetDetailClient({ petId }: { petId: string }) {
                   ) : (
                     <div className="space-y-4">
                       {pet.records.map((record: any) => {
-                        const Icon = eventIcons[record.type] || Activity;
+                        const Icon = eventIcons[record.type as keyof typeof eventIcons] || Activity;
                         return (
                           <div key={record.id} className="border border-cream-200 rounded-lg p-4">
                             <div className="flex items-start gap-4">
@@ -234,7 +234,7 @@ export default function PetDetailClient({ petId }: { petId: string }) {
                               <div className="flex-1">
                                 <div className="flex items-start justify-between mb-2">
                                   <div>
-                                    <Badge variant="outline">{eventLabels[record.type]}</Badge>
+                                    <Badge variant="outline">{eventLabels[record.type as keyof typeof eventLabels]}</Badge>
                                     <p className="text-sm text-forest-600 mt-1">
                                       {formatDate(record.date)}
                                     </p>
